@@ -12,14 +12,15 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import { ChevronDown } from "lucide-react";
+import { useTheme } from "@/utils/contexts/theme-provider";
 
 const Navbar = () => {
-  // const { setTheme, theme } = useTheme();
+  const { setTheme, theme } = useTheme();
 
-  // function handleTheme() {
-  //   const newTheme = theme === "light" ? "dark" : "light";
-  //   setTheme(newTheme);
-  // }
+  function handleTheme() {
+    const newTheme = theme === "light" ? "dark" : "light";
+    setTheme(newTheme);
+  }
 
   const navigate = useNavigate();
   return (
