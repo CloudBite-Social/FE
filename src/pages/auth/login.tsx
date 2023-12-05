@@ -11,69 +11,79 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Link } from "react-router-dom";
 
 const formSchema = z.object({
-  username: z.string().min(2, {
+  email: z.string().min(2, {
+    message: "Username must be at least 2 characters.",
+  }),
+  password: z.string().min(2, {
     message: "Username must be at least 2 characters.",
   }),
 });
 
 const Login = () => {
-  // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "",
+      email: "",
+      password: "",
     },
   });
 
-  // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
     console.log(values);
   }
 
   return (
-    <div className=" w-full h-screen flex justify-center flex-col items-center gap-16">
-      <div className=" w-1/2 border p-10 rounded-md">
-        <p className="font-inter text-center text-3xl mb-10">Login</p>
+    <div className="w-full h-screen flex items-center font-inter overflow-auto">
+      <div className="container w-full md:w-[34.75rem] h-full md:h-fit p-8 md:p-14 lg:py-20 lg:px-14 flex flex-col items-center justify-center bg-white dark:bg-black/25 dark:border rounded-md border shadow">
+        <h1 className="text-4xl font-black mb-16">
+          Cloud<span className="text-teal-600">bite</span>
+        </h1>
+        <p className="font-inter text-center text-3xl font-semibold mb-2">
+          Login
+        </p>
+        <p className="text-[#ABABAB] dark:text-white text-base font-normal mb-10">
+          Sign in to continue
+        </p>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="w-full flex flex-col gap-4"
+          >
             <FormField
               control={form.control}
               name="email"
-              label="email"
-              render={({}) => (
+              render={({ field }) => (
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input placeholder="example@mail.com" type="email" />
+                    <Input
+                      placeholder="example@mail.com"
+                      type="email"
+                      {...field}
+                    />
                   </FormControl>
-                  <FormMessage />
                 </FormItem>
               )}
             />
             <FormField
               control={form.control}
               name="password"
-              label="password"
-              render={({}) => (
+              render={({ field }) => (
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input placeholder="password" type="password" />
+                    <Input placeholder="password" type="password" {...field} />
                   </FormControl>
-                  <FormMessage />
                 </FormItem>
               )}
             />
             <Button className=" w-full" type="submit">
-              Submit
+              Login
             </Button>
           </form>
           <div className="mx-auto my-4 flex w-full items-center justify-evenly before:mr-4 before:block before:h-px before:flex-grow before:bg-stone-400 after:ml-4 after:block after:h-px after:flex-grow after:bg-stone-400">

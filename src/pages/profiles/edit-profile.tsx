@@ -114,7 +114,7 @@ const EditProfile = () => {
         </div>
         <Form {...form}>
           <form
-            className="w-full md:w-2/3 lg:w-1/2 flex flex-col gap-4"
+            className="w-full md:w-2/3 lg:w-1/2 flex flex-col gap-6"
             onSubmit={form.handleSubmit(onSubmit)}
           >
             <CustomFormField
@@ -142,7 +142,7 @@ const EditProfile = () => {
                   {...fileRef}
                   type="file"
                   accept="image/jpg, image/jpeg, image/png"
-                  className="cursor-pointer"
+                  className="cursor-pointer text-black/50 dark:text-white/50"
                   disabled={form.formState.isSubmitting}
                   aria-disabled={form.formState.isSubmitting}
                 />
