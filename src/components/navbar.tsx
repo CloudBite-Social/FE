@@ -56,7 +56,7 @@ const Navbar = () => {
               <DropdownMenuItem onClick={() => navigate("/edit-profile")}>
                 Edit profile
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => navigate("/list-post")}>
+              <DropdownMenuItem onClick={() => navigate("/history-post")}>
                 My post
               </DropdownMenuItem>
               <DropdownMenuSeparator />
