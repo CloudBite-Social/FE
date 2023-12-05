@@ -1,5 +1,3 @@
-// import { useNavigate } from "react-router-dom";
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,9 +16,10 @@ import {
   UploadIcon,
 } from "lucide-react";
 import CustomDialog from "@/components/dialog";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   return (
     <Layout>
@@ -51,16 +50,14 @@ const Home = () => {
         </div>
         {/* Post 1 */}
         <div className="w-1/2 h-fit flex bg-white dark:bg-black border p-5 gap-3 rounded-md justify-center shadow">
-          <div>
+          <div className="flex-none">
             <img
               src="https://github.com/shadcn.png"
               alt="johndoe"
-              width={80}
-              height={80}
-              className="rounded-full"
+              className="rounded-full w-12"
             />
           </div>
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 grow">
             <div>
               <h1 className="font-medium">Amelia</h1>
               <p className=" text-neutral-500 font-light text-xs">
@@ -75,14 +72,14 @@ const Home = () => {
             <div className="flex gap-1">
               <MessageCircle
                 className="cursor-pointer"
-                // onClick={() => navigate("/page-comments/:id_post")}
+                onClick={() => navigate("/detail-post")}
               />
               <p>2</p>
             </div>
             <hr />
             <Button
               className="h-fit justify-start italic bg-neutral-100 text-black/50 hover:bg-neutral-300"
-              // onClick={() => navigate("/page-comments/:id_post")}
+              onClick={() => navigate("/detail-post")}
             >
               Add comment...
             </Button>
