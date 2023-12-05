@@ -4,7 +4,7 @@ import Login from "@/pages/auth/login";
 import Register from "@/pages/auth/register";
 import Profie from "@/pages/profiles";
 import EditProfile from "@/pages/profiles/edit-profile";
-import ListPost from "@/pages/list-post";
+import ListPost from "@/pages/post";
 
 export default function Router() {
   const router = createBrowserRouter([
@@ -12,7 +12,7 @@ export default function Router() {
       path: "/",
       element: <Home />,
     },
-    { 
+    {
       path: "/login",
       element: <Login />,
     },

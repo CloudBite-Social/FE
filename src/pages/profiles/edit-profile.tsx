@@ -96,13 +96,13 @@ const EditProfile = () => {
 
   return (
     <Layout>
-      <div className="w-full flex justify-end">
+      <div className="container flex justify-end">
         <Alert
           title="Are you absolutely sure?"
           description="This action cannot be undone. This will permanently delete your account and remove your data from our servers."
           onAction={handleDeleteProfile}
         >
-          <div className="p-3 bg-red-600/30 dark:bg-red-900/40 rounded-md shadow-md hover:bg-red-500 dark:hover:bg-red-900">
+          <div className="p-3 rounded-md shadow-md hover:bg-red-500 dark:hover:bg-red-900 dark:border">
             <Trash2 />
           </div>
         </Alert>
