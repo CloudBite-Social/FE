@@ -4,29 +4,36 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Button } from "./ui/button";
 
-interface Props {
+type Props = {
+  title?: string;
   children: ReactNode;
-}
+  description?: string | any;
+  onCancel?: () => {};
+  onAction?: () => {};
+};
 
 const CustomDialog = (props: Props) => {
-  const { children } = props;
+  const { children, title, description, onCancel, onAction } = props;
 
   return (
     <Dialog>
       <DialogTrigger>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Are you sure absolutely sure?</DialogTitle>
-          <DialogDescription>
-            This action cannot be undone. This will permanently delete your
-            account and remove your data from our servers.
-          </DialogDescription>
+          <DialogTitle>{title}</DialogTitle>
+          <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
+        <DialogFooter>
+          <Button onClick={onCancel}>Cancel</Button>
+          {onAction && <Button onClick={onAction}>Continue</Button>}
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

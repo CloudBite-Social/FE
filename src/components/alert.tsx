@@ -1,15 +1,16 @@
 import { ReactNode } from "react";
 
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 type Props = {
   title?: string;
@@ -24,19 +25,21 @@ const Alert = (props: Props) => {
 
   return (
     <div>
-      <Dialog>
-        <DialogTrigger>{children}</DialogTrigger>
-        <DialogContent className="dark:bg-black/30">
-          <DialogHeader>
-            <DialogTitle>{title}</DialogTitle>
-            <DialogDescription>{description}</DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button onClick={onCancel}>Cancel</Button>
-            {onAction && <Button onClick={onAction}>Continue</Button>}
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <AlertDialog>
+        <AlertDialogTrigger>{children}</AlertDialogTrigger>
+        <AlertDialogContent className="dark:bg-black/30">
+          <AlertDialogHeader>
+            <AlertDialogTitle>{title}</AlertDialogTitle>
+            <AlertDialogDescription>{description}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={onCancel}>Cancel</AlertDialogCancel>
+            {onAction && (
+              <AlertDialogAction onClick={onAction}>Continue</AlertDialogAction>
+            )}
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

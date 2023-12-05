@@ -1,21 +1,30 @@
 import Layout from "@/components/layout";
-import { MoreVerticalIcon, SendHorizonal, Trash2 } from "lucide-react";
+import {
+  ChevronLeft,
+  MoreVerticalIcon,
+  SendHorizonal,
+  Trash2,
+} from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const DetailPost = () => {
+  const navigate = useNavigate();
+
   return (
     <Layout>
       <div className="w-full flex flex-col items-center gap-8">
-        <div className="w-1/2 h-fit flex bg-white dark:bg-black border p-5 gap-3 rounded-md justify-center shadow">
-          <div>
+        <div className="w-[60%] h-fit flex p-5 gap-3 rounded-md justify-center">
+          <div className="flex-none h-fit mr-4 rounded-md bg-white hover:bg-black/5 dark:bg-black dark:hover:bg-white/10 shadow border mx-3 cursor-pointer">
+            <ChevronLeft size={40} onClick={() => navigate(-1)} />
+          </div>
+          <div className="flex-none">
             <img
               src="https://github.com/shadcn.png"
               alt="johndoe"
-              width={80}
-              height={80}
-              className="rounded-full"
+              className="rounded-full w-12"
             />
           </div>
-          <div className="flex flex-col gap-4 ">
+          <div className="flex flex-col gap-4 grow">
             <div>
               <h1 className="font-semibold">John Doe</h1>
               <p className=" text-neutral-500 font-light text-xs">
