@@ -31,7 +31,7 @@ const CustomDialog = (props: Props) => {
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button onClick={onCancel}>Cancel</Button>
+          {onCancel && <Button onClick={onCancel}>Cancel</Button>}
           {onAction && <Button onClick={onAction}>Continue</Button>}
         </DialogFooter>
       </DialogContent>
