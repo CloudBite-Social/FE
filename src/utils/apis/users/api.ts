@@ -14,7 +14,7 @@ export const getUser = async () => {
 
 export const updateUser = async (body: UpdateUserSchema) => {
   try {
-    const response = await axiosWithConfig.put(`/users/`, body);
+    const response = await axiosWithConfig.patch(`/users/`, body);
 
     return response.data as Response;
   } catch (error: any) {
