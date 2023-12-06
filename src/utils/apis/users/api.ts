@@ -1,16 +1,12 @@
-// import { Response } from "@/utils/types/api";
+import { Response } from "@/utils/types/api";
 import { User, UpdateUserSchema } from "./types";
-// import axiosWithConfig from "../axiosWithConfig";
-
-import axios from "axios";
+import axiosWithConfig from "../axiosWithConfig";
 
 export const getUser = async () => {
   try {
-    const response = await axios.get(
-      "https://virtserver.swaggerhub.com/HERUSETIAWAN_1/sosmed/1.0.0/users"
-    );
+    const response = await axiosWithConfig.get(`/users/`);
 
-    return response.data;
+    return response.data as Response<User>;
   } catch (error: any) {
     throw Error(error.response.data.message);
   }
@@ -18,13 +14,9 @@ export const getUser = async () => {
 
 export const updateUser = async (body: UpdateUserSchema) => {
   try {
-    const response = await axios.patch(
-      "https://virtserver.swaggerhub.com/HERUSETIAWAN_1/sosmed/1.0.0/users",
-      body
-    );
+    const response = await axiosWithConfig.put(`/users/`, body);
 
-    // return response.data as Response;
-    return response.data;
+    return response.data as Response;
   } catch (error: any) {
     throw Error(error.response.data.message);
   }
@@ -32,12 +24,9 @@ export const updateUser = async (body: UpdateUserSchema) => {
 
 export const deleteUser = async () => {
   try {
-    const response = await axios.delete(
-      "https://virtserver.swaggerhub.com/HERUSETIAWAN_1/sosmed/1.0.0/users"
-    );
+    const response = await axiosWithConfig.delete(`/users/`);
 
-    // return response.data as Response;
-    return response.data;
+    return response.data as Response;
   } catch (error: any) {
     throw Error(error.response.data.message);
   }
