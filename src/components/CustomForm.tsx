@@ -18,7 +18,7 @@ import {
 
 interface Props<T extends FieldValues> {
   name: FieldPath<T>;
-  label: string;
+  label?: string;
   placeholder?: string;
   options?: any[];
   description?: string;
