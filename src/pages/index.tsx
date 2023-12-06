@@ -13,14 +13,16 @@ import { Form } from "@/components/ui/form";
 import Layout from "@/components/layout";
 
 import { PostPayloadSchema, addPosts, getPosts } from "@/utils/apis/posts";
-import { postPayloadSchema } from "@/utils/apis/posts/types";
+import { Post, postPayloadSchema } from "@/utils/apis/posts/types";
 
 import { Loader2, SendHorizontalIcon, UploadIcon } from "lucide-react";
 
 const Home = () => {
   const { toast } = useToast();
 
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState<Post[]>([]);
+  console.log(posts);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     fetchData();
@@ -28,7 +30,7 @@ const Home = () => {
 
   async function fetchData() {
     try {
-      const result = await getPosts();
+      const result = await getPosts("1", "10");
       setPosts(result.data);
     } catch (error: any) {
       toast({
@@ -67,6 +69,14 @@ const Home = () => {
 
   return (
     <Layout>
+      <div className="w-full flex justify-center sticky top-0">
+        <input
+          type="text"
+          placeholder="Search"
+          onChange={(e) => setSearch(e.target.value)}
+          className="bg-white shadow px-4 py-2 rounded-full absolute"
+        />
+      </div>
       <div className="w-full flex flex-col items-center gap-8 transition-all">
         <div className="w-1/2 h-fit bg-white dark:bg-black rounded-lg p-6 border shadow">
           <Form {...form}>
@@ -138,6 +148,19 @@ const Home = () => {
             </form>
           </Form>
         </div>
+        {/* {posts
+          .filter((item) => {
+            if (search === "") {
+              return item;
+            } else if (
+              item.caption.toLowerCase().includes(search.toLowerCase())
+            ) {
+              return item;
+            }
+          })
+          .map((post, i) => (
+            <PostCard key={i} data={post} />
+          ))} */}
         {posts.map((post, i) => (
           <PostCard key={i} data={post} />
         ))}

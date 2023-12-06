@@ -2,10 +2,10 @@ import { Response, ResponsePagination } from "@/utils/types/api";
 import axiosWithConfig from "../axiosWithConfig";
 import { PostPayloadSchema } from "./types";
 
-export const getPosts = async () => {
+export const getPosts = async (query: string, limit: string) => {
   try {
     const response = await axiosWithConfig.get(
-      `/posts?start=0&limit=5&keyword=post`
+      `/posts?start=0&${limit}=5&keyword=${query}`
     );
 
     return response.data as ResponsePagination;
