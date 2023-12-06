@@ -25,10 +25,7 @@ export const updateUserSchema = z.object({
     .string()
     .min(1, { message: "Email is required" })
     .email("Invalid email"),
-  password: z
-    .string()
-    .min(1, { message: "Password is required" })
-    .min(8, { message: "Password must have than 8 characters" }),
+  password: z.string(),
   image: z
     .any()
     .refine((files) => files?.length == 1, "Image is required.")
