@@ -13,16 +13,27 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import { ChevronDown } from "lucide-react";
 import { useTheme } from "@/utils/contexts/theme-provider";
+import { useToken } from "@/utils/contexts/token";
+import { useToast } from "@/components/ui/use-toast";
 
 const Navbar = () => {
   const { setTheme, theme } = useTheme();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const { changeToken } = useToken();
 
   function handleTheme() {
     const newTheme = theme === "light" ? "dark" : "light";
     setTheme(newTheme);
   }
 
-  const navigate = useNavigate();
+  function handleLogout() {
+    changeToken();
+    toast({
+      description: "Logout Successfully",
+    });
+  }
   return (
     <header className="w-full sticky top-0 bg-white dark:bg-black/90 z-50">
       <nav className="flex py-4 px-6 xl:px-32 items-center justify-between border sticky z-50 mx-auto">
@@ -43,7 +54,6 @@ const Navbar = () => {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <div className="h-full p-3 cursor-pointer">
-                {/* <Triangle className="rotate-180" /> */}
                 <ChevronDown />
               </div>
             </DropdownMenuTrigger>
@@ -67,7 +77,9 @@ const Navbar = () => {
               <DropdownMenuItem onClick={() => navigate("/login")}>
                 Login
               </DropdownMenuItem>
-              <DropdownMenuItem>Logout</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleLogout()}>
+                Logout
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

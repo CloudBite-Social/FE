@@ -1,10 +1,34 @@
 import Layout from "@/components/layout";
 import { Button } from "@/components/ui/button";
+import { toast, useToast } from "@/components/ui/use-toast";
+import { User, getUser } from "@/utils/apis/users";
 import { CircleUserIcon, FileEdit } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 const Profie = () => {
+  const { toast } = useToast();
   const navigate = useNavigate();
+
+  const [profile, setProfile] = useState<User>();
+  console.log(profile);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  async function fetchData() {
+    try {
+      const result = await getUser();
+      setProfile(result.data);
+    } catch (error: any) {
+      toast({
+        title: "Oops! Something went wrong.",
+        description: error.toString(),
+        variant: "destructive",
+      });
+    }
+  }
   return (
     <Layout>
       {/* <div className="w-full flex justify-end mb-10">
@@ -25,7 +49,7 @@ const Profie = () => {
             Full Name
           </p>
           <div className="px-4 py-2 border border-slate-300 dark:border-white/30 rounded-md">
-            <p>John Doe</p>
+            <p>{profile?.name}</p>
           </div>
         </div>
         <div className="w-full md:w-2/3 lg:w-1/2">
@@ -33,7 +57,7 @@ const Profie = () => {
             Email
           </p>
           <div className="px-4 py-2 border border-slate-300 dark:border-white/30 rounded-md">
-            <p>johndoe@mail.com</p>
+            <p>{profile?.email}</p>
           </div>
         </div>
         <div className="w-full md:w-2/3 lg:w-1/2">

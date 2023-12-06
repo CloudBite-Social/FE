@@ -1,12 +1,21 @@
 import * as z from "zod";
 
 export interface User {
-  id: number;
+  user_id: number;
   name: string;
   email: string;
-  password: string;
   image: string;
+  create_at: Date;
+  password: string;
+  posts: {
+    post_id: number;
+    caption: string;
+    image: string;
+    created_at: Date;
+    comment_count: number;
+  }[];
 }
+
 const MAX_FILE_SIZE = 5000000;
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png"];
 
@@ -16,10 +25,7 @@ export const updateUserSchema = z.object({
     .string()
     .min(1, { message: "Email is required" })
     .email("Invalid email"),
-  password: z
-    .string()
-    .min(1, { message: "Password is required" })
-    .min(8, { message: "Password must have than 8 characters" }),
+  password: z.string(),
   image: z
     .any()
     .refine((files) => files?.length == 1, "Image is required.")
