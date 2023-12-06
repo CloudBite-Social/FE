@@ -1,114 +1,148 @@
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-
-import { Button } from "@/components/ui/button";
 import PostCard from "@/components/post-card";
 import Layout from "@/components/layout";
 
-import {
-  SendHorizontalIcon,
-  MessageCircle,
-  MoreVertical,
-  UploadIcon,
-} from "lucide-react";
-import CustomDialog from "@/components/dialog";
-import { useNavigate } from "react-router-dom";
+import { SendHorizontalIcon, UploadIcon } from "lucide-react";
+import { useEffect, useState } from "react";
+import { getPosts } from "@/utils/apis/posts";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+
+import { CustomFormField } from "@/components/CustomForm";
+import { Form } from "@/components/ui/form";
+import { useToast } from "@/components/ui/use-toast";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+
+import { Loader2 } from "lucide-react";
+import { PostPayloadSchema, postPayloadSchema } from "@/utils/apis/posts/types";
+import { addPosts } from "@/utils/apis/posts/api";
 
 const Home = () => {
-  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  async function fetchData() {
+    try {
+      const result = await getPosts();
+      setPosts(result.data);
+    } catch (error: any) {
+      toast({
+        title: "Oops! Something went wrong.",
+        description: error.toString(),
+        variant: "destructive",
+      });
+    }
+  }
+
+  const form = useForm<PostPayloadSchema>({
+    resolver: zodResolver(postPayloadSchema),
+    defaultValues: {
+      caption: "",
+      image: "",
+    },
+  });
+
+  const fileRef = form.register("image", { required: true });
+
+  async function onSubmit(data: PostPayloadSchema) {
+    data.image = data.image[0].name;
+    try {
+      const result = await addPosts(data);
+      toast({
+        description: result.message,
+      });
+    } catch (error: any) {
+      toast({
+        title: "Oops! Something went wrong.",
+        description: error.toString(),
+        variant: "destructive",
+      });
+    }
+  }
 
   return (
     <Layout>
       <div className="w-full flex flex-col items-center gap-8 transition-all">
         <div className="w-1/2 h-fit bg-white dark:bg-black rounded-lg p-6 border shadow">
-          <div className="flex items-center gap-6 mb-10">
-            <img
-              src="https://github.com/shadcn.png"
-              alt="johndoe"
-              width={80}
-              className="rounded-lg"
-            />
-            <p className="text-neutral-500">What’s up?</p>
-          </div>
-          <hr />
-          <div className="flex justify-between items-center">
-            <div className="flex mt-4 gap-3 items-center cursor-pointer">
-              <div className="flex items-center justify-center rounded-md p-2 bg-neutral-100 dark:bg-black dark:border">
-                <UploadIcon />
-              </div>
-              <p>Upload image</p>
-            </div>
-            <div className="flex mt-4 gap-3 items-center cursor-pointer">
-              <SendHorizontalIcon />
-              <p>Post</p>
-            </div>
-          </div>
-        </div>
-        {/* Post 1 */}
-        <div className="w-1/2 h-fit flex bg-white dark:bg-black border p-5 gap-3 rounded-md justify-center shadow">
-          <div className="flex-none">
-            <img
-              src="https://github.com/shadcn.png"
-              alt="johndoe"
-              className="rounded-full w-12"
-            />
-          </div>
-          <div className="flex flex-col gap-4 grow">
-            <div>
-              <h1 className="font-medium">Amelia</h1>
-              <p className=" text-neutral-500 font-light text-xs">
-                9 Sept 2023 | 09.00 pm
-              </p>
-            </div>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              Tincidunt ornare massa eget egestas.
-            </p>
-            <div className="flex gap-1">
-              <MessageCircle
-                className="cursor-pointer"
-                onClick={() => navigate("/detail-post")}
-              />
-              <p>2</p>
-            </div>
-            <hr />
-            <Button
-              className="h-fit justify-start italic bg-neutral-100 text-black/50 hover:bg-neutral-300"
-              onClick={() => navigate("/detail-post")}
+          <Form {...form}>
+            <form
+              className="w-full flex flex-col gap-6"
+              onSubmit={form.handleSubmit(onSubmit)}
             >
-              Add comment...
-            </Button>
-          </div>
-          <div className="invisible">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <div>
-                  <MoreVertical className="cursor-pointer" />
+              <div className="flex items-start gap-4">
+                <div className="flex-none">
+                  <img
+                    src="https://github.com/shadcn.png"
+                    alt="johndoe"
+                    width={80}
+                    className="rounded-lg"
+                  />
                 </div>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="mt-2" align="start">
-                <DropdownMenuItem
-                // onClick={() => ()}
+                <div className="flex-auto mt-[-9px]">
+                  <CustomFormField control={form.control} name="caption">
+                    {(field) => (
+                      <Textarea
+                        {...field}
+                        placeholder="What’s up?"
+                        className="resize-none"
+                        disabled={form.formState.isSubmitting}
+                        aria-disabled={form.formState.isSubmitting}
+                      />
+                    )}
+                  </CustomFormField>
+                </div>
+              </div>
+              <hr />
+              <div className="w-full flex justify-between items-center">
+                <div className="flex items-center">
+                  <div className="flex items-center justify-center rounded-md p-2 bg-neutral-100 dark:bg-black dark:border">
+                    <UploadIcon />
+                  </div>
+                  <CustomFormField control={form.control} name="image">
+                    {() => (
+                      <Input
+                        {...fileRef}
+                        type="file"
+                        accept="image/jpg, image/jpeg, image/png"
+                        className="cursor-pointer text-black/50 dark:text-white/50 bg-white dark:bg-black border-none"
+                        disabled={form.formState.isSubmitting}
+                        aria-disabled={form.formState.isSubmitting}
+                      />
+                    )}
+                  </CustomFormField>
+                </div>
+                <Button
+                  className="bg-white dark:bg-black outline-none hover:bg-white"
+                  type="submit"
+                  disabled={form.formState.isSubmitting}
+                  aria-disabled={form.formState.isSubmitting}
                 >
-                  <CustomDialog>Edit</CustomDialog>
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                // onClick={() => ()}
-                >
-                  Delete
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
+                  {form.formState.isSubmitting ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please
+                      wait
+                    </>
+                  ) : (
+                    <div className="flex gap-3 items-center cursor-pointer text-black dark:text-white">
+                      <SendHorizontalIcon />
+                      <p>Post</p>
+                    </div>
+                  )}
+                </Button>
+              </div>
+            </form>
+          </Form>
         </div>
-
-        {/* Post 2 */}
-        <PostCard />
+        {posts.map((post, i) => (
+          <PostCard key={i} data={post} />
+        ))}
       </div>
     </Layout>
   );
