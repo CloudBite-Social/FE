@@ -5,7 +5,7 @@ import Login from "@/pages/auth/login";
 import Register from "@/pages/auth/register";
 import Profie from "@/pages/profiles";
 import EditProfile from "@/pages/profiles/edit-profile";
-import DetailPost from "@/pages/posts/detail";
+import DetailPosts from "@/pages/posts/detail";
 import HistoryPost from "@/pages/profiles/history-post";
 import ListPost from "@/pages/posts";
 import ProtectedRoutes from "./protected-routes";
@@ -13,45 +13,41 @@ import ProtectedRoutes from "./protected-routes";
 export default function Router() {
   const router = createBrowserRouter([
     {
-      element: <ProtectedRoutes />,
-      children: [
-        {
-          path: "/",
-          element: <Home />,
-        },
-        {
-          path: "/login",
-          element: <Login />,
-        },
-        {
-          path: "/register",
-          element: <Register />,
-        },
-        {
-          path: "/list-post",
-          element: <ListPost />,
-        },
-        {
-          path: "/detail-post",
-          element: <DetailPost />,
-        },
-        {
-          path: "/history-post",
-          element: <HistoryPost />,
-        },
-        {
-          path: "/profile",
-          element: <Profie />,
-        },
-        {
-          path: "/edit-profile",
-          element: <EditProfile />,
-        },
-        {
-          path: "*",
-          element: <div>404 page not found</div>,
-        },
-      ],
+      path: "/",
+      element: <Home />,
+    },
+    {
+      path: "/login",
+      element: <Login />,
+    },
+    {
+      path: "/register",
+      element: <Register />,
+    },
+    {
+      path: "/list-post",
+      element: <ListPost />,
+    },
+    {
+      path: "/detail-post/:post_id",
+      element: <DetailPosts />,
+    },
+    {
+      path: "/history-post",
+      element: <HistoryPost />,
+    },
+    {
+      path: "/profile",
+      element: <Profie />,
+    },
+    {
+      path: "/edit-profile",
+      element: <EditProfile />,
+    },
+    {
+      path: "*",
+      element: <div>404 page not found</div>,
+
     },
   ]);
 
