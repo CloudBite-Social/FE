@@ -89,7 +89,7 @@ const Home = () => {
                       <Textarea
                         {...field}
                         placeholder="What’s up?"
-                        className="resize-none"
+                        className="resize-none border-none"
                         disabled={form.formState.isSubmitting}
                         aria-disabled={form.formState.isSubmitting}
                       />
