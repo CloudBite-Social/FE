@@ -1,14 +1,42 @@
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { format } from "date-fns";
+
+import { DetailPost, getDetailPosts } from "@/utils/apis/posts";
+
+import { useToast } from "@/components/ui/use-toast";
 import Layout from "@/components/layout";
+
 import {
   ChevronLeft,
   MoreVerticalIcon,
   SendHorizonal,
   Trash2,
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 
-const DetailPost = () => {
+const DetailPosts = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
+  const params = useParams();
+
+  const [detailPosts, setDetailPosts] = useState<DetailPost>();
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  async function fetchData() {
+    try {
+      const result = await getDetailPosts(params.post_id!);
+      setDetailPosts(result.data);
+    } catch (error: any) {
+      toast({
+        title: "Oops! Something went wrong.",
+        description: error.toString(),
+        variant: "destructive",
+      });
+    }
+  }
 
   return (
     <Layout>
@@ -19,103 +47,59 @@ const DetailPost = () => {
           </div>
           <div className="flex-none">
             <img
-              src="https://github.com/shadcn.png"
-              alt="johndoe"
+              src={detailPosts?.user.image}
+              alt={detailPosts?.user.name}
               className="rounded-full w-12"
             />
           </div>
           <div className="flex flex-col gap-4 grow">
             <div>
-              <h1 className="font-semibold">John Doe</h1>
-              <p className=" text-neutral-500 font-light text-xs">
-                9 Sept 2023 | 09.00 pm
-              </p>
+              <h1 className="font-semibold">{detailPosts?.user.name}</h1>
+              {detailPosts?.created_at.toString() && (
+                <p className=" text-neutral-500 font-light text-xs">
+                  {format(new Date(detailPosts?.created_at), "dd MMM Y - p")}
+                </p>
+              )}
             </div>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              Tincidunt ornare massa eget egestas.
-            </p>
+            <p>{detailPosts?.caption}</p>
+            {detailPosts?.image && (
+              <img
+                src={detailPosts.image}
+                alt={detailPosts.image}
+                className="rounded-lg"
+              />
+            )}
             <hr />
             <h1 className="font-semibold">Komentar</h1>
             <div className="flex flex-col gap-6">
-              {/* comment 1 */}
-              <div className="flex gap-4">
-                <div className="flex-none">
-                  <img
-                    src="https://github.com/shadcn.png"
-                    alt="johndoe"
-                    className="rounded-full w-10"
-                  />
+              {detailPosts?.comment.map((data) => (
+                <div className="flex gap-4" key={data.comment_id}>
+                  <div className="flex-none">
+                    <img
+                      src={data.user.image}
+                      alt="johndoe"
+                      className="rounded-full w-10"
+                    />
+                  </div>
+                  <div className="space-y-1 flex-auto">
+                    <h1 className="font-semibold leading-none">
+                      {data.user.name}
+                      <span className="ml-2 font-light text-sm">
+                        {format(new Date(data.created_at), "dd MMM Y - p")}
+                      </span>
+                    </h1>
+                    <p>{data.text}</p>
+                  </div>
+                  <div>
+                    <Trash2 />
+                  </div>
                 </div>
-                <div className="space-y-1 flex-auto">
-                  <h1 className="font-semibold">
-                    Cris{" "}
-                    <span className="font-light text-sm">- 10 Sept 2023</span>
-                  </h1>
-                  <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                    do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua.
-                  </p>
-                </div>
-                <div>
-                  <Trash2 />
-                </div>
-              </div>
-
-              {/* comment 2 */}
-              <div className="flex gap-4">
-                <div className="flex-none">
-                  <img
-                    src="https://github.com/shadcn.png"
-                    alt="johndoe"
-                    className="rounded-full w-10 "
-                  />
-                </div>
-                <div className="space-y-1 flex-auto">
-                  <h1 className="font-semibold">
-                    Amelia{" "}
-                    <span className="font-light text-sm">- 12 Sept 2023</span>
-                  </h1>
-                  <p>Lorem ipsum dolor sit amet.</p>
-                </div>
-                <div>
-                  <Trash2 />
-                </div>
-              </div>
-
-              {/* comment 3 */}
-              <div className="flex gap-4">
-                <div className="flex-none">
-                  <img
-                    src="https://github.com/shadcn.png"
-                    alt="johndoe"
-                    className="rounded-full w-10"
-                  />
-                </div>
-                <div className="space-y-1 flex-auto">
-                  <h1 className="font-semibold">
-                    John Doe{" "}
-                    <span className="font-light text-sm">- 16 Sept 2023</span>
-                  </h1>
-                  <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing
-                    elit.Lorem ipsum dolor sit amet, consectetur adipiscing
-                    elit, sed do eiusmod tempor incididunt ut labore et dolore
-                    magna aliqua.
-                  </p>
-                </div>
-                <div>
-                  <Trash2 />
-                </div>
-              </div>
+              ))}
             </div>
             <div className="flex gap-20 items-center">
               <input
                 className="w-full h-fit justify-start italic bg-neutral-100 text-black/50 hover:bg-neutral-300 px-4 py-1 rounded-lg outline-none"
                 placeholder="Add comment..."
-                // onClick={() => navigate("/detail-post")}
               />
 
               <SendHorizonal size={35} />
@@ -130,4 +114,4 @@ const DetailPost = () => {
   );
 };
 
-export default DetailPost;
+export default DetailPosts;
