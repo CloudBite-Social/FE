@@ -29,6 +29,7 @@ const EditProfile = () => {
   // const { changeToken } = useToken();
 
   const [profile, setProfile] = useState<User>();
+  console.log(profile);
 
   useEffect(() => {
     fetchData();
@@ -37,7 +38,7 @@ const EditProfile = () => {
   async function fetchData() {
     try {
       const result = await getUser();
-      setProfile(result.payload);
+      setProfile(result.data);
     } catch (error: any) {
       toast({
         title: "Oops! Something went wrong.",
@@ -52,13 +53,13 @@ const EditProfile = () => {
     defaultValues: {
       name: profile?.name! ?? "",
       email: profile?.email! ?? "",
-      password: "",
+      password: profile?.password! ?? "",
       image: profile?.image! ?? "",
     },
     values: {
       name: profile?.name!,
       email: profile?.email!,
-      password: "",
+      password: profile?.password!,
       image: profile?.image!,
     },
   });
@@ -114,7 +115,7 @@ const EditProfile = () => {
         </div>
         <Form {...form}>
           <form
-            className="w-full md:w-2/3 lg:w-1/2 flex flex-col gap-6"
+            className="w-full md:w-2/3 lg:w-1/2 flex flex-col gap-4"
             onSubmit={form.handleSubmit(onSubmit)}
           >
             <CustomFormField
@@ -142,7 +143,7 @@ const EditProfile = () => {
                   {...fileRef}
                   type="file"
                   accept="image/jpg, image/jpeg, image/png"
-                  className="cursor-pointer text-black/50 dark:text-white/50"
+                  className="cursor-pointer"
                   disabled={form.formState.isSubmitting}
                   aria-disabled={form.formState.isSubmitting}
                 />
@@ -167,7 +168,7 @@ const EditProfile = () => {
               {(field) => (
                 <Input
                   {...field}
-                  placeholder="Password"
+                  placeholder={profile?.password}
                   type="password"
                   disabled={form.formState.isSubmitting}
                   aria-disabled={form.formState.isSubmitting}

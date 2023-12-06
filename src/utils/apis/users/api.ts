@@ -6,9 +6,10 @@ import axios from "axios";
 
 export const getUser = async () => {
   try {
-    const response = await axios.get("/users");
+    const response = await axios.get(
+      "https://virtserver.swaggerhub.com/HERUSETIAWAN_1/sosmed/1.0.0/users"
+    );
 
-    // return response.data as Response<User>;
     return response.data;
   } catch (error: any) {
     throw Error(error.response.data.message);
@@ -17,7 +18,10 @@ export const getUser = async () => {
 
 export const updateUser = async (body: UpdateUserSchema) => {
   try {
-    const response = await axios.put("/users/", body);
+    const response = await axios.patch(
+      "https://virtserver.swaggerhub.com/HERUSETIAWAN_1/sosmed/1.0.0/users",
+      body
+    );
 
     // return response.data as Response;
     return response.data;
@@ -28,7 +32,9 @@ export const updateUser = async (body: UpdateUserSchema) => {
 
 export const deleteUser = async () => {
   try {
-    const response = await axios.delete("/users/");
+    const response = await axios.delete(
+      "https://virtserver.swaggerhub.com/HERUSETIAWAN_1/sosmed/1.0.0/users"
+    );
 
     // return response.data as Response;
     return response.data;
