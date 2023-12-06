@@ -1,3 +1,11 @@
+import { useNavigate } from "react-router-dom";
+import { format } from "date-fns";
+
+import EditPostForm from "@/components/form/edit-post-form";
+import { useToast } from "@/components/ui/use-toast";
+import { Button } from "@/components/ui/button";
+import CustomDialog from "@/components/dialog";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -5,17 +13,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { Button } from "@/components/ui/button";
-
 import { Edit2, MessageCircle, MoreVerticalIcon, Trash2 } from "lucide-react";
-
-import { useNavigate } from "react-router-dom";
-import { Post } from "@/utils/apis/posts";
-import { format } from "date-fns";
-import { deletePosts } from "@/utils/apis/posts/api";
-import { useToast } from "./ui/use-toast";
-import CustomDialog from "./dialog";
-import EditPostForm from "./form/edit-post-form";
+import { Post, deletePosts } from "@/utils/apis/posts";
 
 interface Props {
   data: Post;
@@ -30,7 +29,7 @@ const PostCard = (props: Props) => {
     try {
       const result = await deletePosts(post_id);
       toast({ description: result.message });
-      // changeToken();
+
       navigate("/");
     } catch (error: any) {
       toast({

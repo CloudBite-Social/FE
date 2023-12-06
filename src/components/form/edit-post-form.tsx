@@ -3,19 +3,20 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { CustomFormField } from "@/components/CustomForm";
-import { Form } from "@/components/ui/form";
 import { useToast } from "@/components/ui/use-toast";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Form } from "@/components/ui/form";
 
 import { Loader2 } from "lucide-react";
 import {
   DetailPost,
   PostPayloadSchema,
-  postPayloadSchema,
-} from "@/utils/apis/posts/types";
-import { editPosts, getDetailPosts } from "@/utils/apis/posts/api";
+  editPosts,
+  getDetailPosts,
+} from "@/utils/apis/posts";
+import { postPayloadSchema } from "@/utils/apis/posts/types";
 
 interface Props {
   post_id: string;
@@ -89,7 +90,6 @@ const EditPostForm = (props: Props) => {
             {(field) => (
               <Textarea
                 {...field}
-                placeholder="What’s up?"
                 className="resize-none"
                 disabled={form.formState.isSubmitting}
                 aria-disabled={form.formState.isSubmitting}
@@ -116,7 +116,8 @@ const EditPostForm = (props: Props) => {
           >
             {form.formState.isSubmitting ? (
               <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please wait
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />{" "}
+                <p>Please wait</p>
               </>
             ) : (
               "Edit"

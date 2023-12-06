@@ -4,7 +4,7 @@ import axiosWithConfig from "../axiosWithConfig";
 
 export const getUser = async () => {
   try {
-    const response = await axiosWithConfig.get(`/users/`);
+    const response = await axiosWithConfig.get(`/users`);
 
     return response.data as Response<User>;
   } catch (error: any) {
@@ -14,7 +14,7 @@ export const getUser = async () => {
 
 export const updateUser = async (body: UpdateUserSchema) => {
   try {
-    const response = await axiosWithConfig.patch(`/users/`, body);
+    const response = await axiosWithConfig.patch(`/users`, body);
 
     return response.data as Response;
   } catch (error: any) {
@@ -24,7 +24,7 @@ export const updateUser = async (body: UpdateUserSchema) => {
 
 export const deleteUser = async () => {
   try {
-    const response = await axiosWithConfig.delete(`/users/`);
+    const response = await axiosWithConfig.delete(`/users`);
 
     return response.data as Response;
   } catch (error: any) {

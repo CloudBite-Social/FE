@@ -1,12 +1,11 @@
 import { Response, ResponsePagination } from "@/utils/types/api";
+import axiosWithConfig from "../axiosWithConfig";
 import { PostPayloadSchema } from "./types";
-
-import axios from "axios";
 
 export const getPosts = async () => {
   try {
-    const response = await axios.get(
-      `https://virtserver.swaggerhub.com/HERUSETIAWAN_1/sosmed/1.0.0/posts?start=0&limit=5&keyword=post`
+    const response = await axiosWithConfig.get(
+      `/posts?start=0&limit=5&keyword=post`
     );
 
     return response.data as ResponsePagination;
@@ -17,9 +16,7 @@ export const getPosts = async () => {
 
 export const getDetailPosts = async (post_id: string) => {
   try {
-    const response = await axios.get(
-      `https://virtserver.swaggerhub.com/HERUSETIAWAN_1/sosmed/1.0.0/posts/${post_id}`
-    );
+    const response = await axiosWithConfig.get(`/posts/${post_id}`);
 
     return response.data as Response;
   } catch (error: any) {
@@ -29,10 +26,7 @@ export const getDetailPosts = async (post_id: string) => {
 
 export const addPosts = async (body: PostPayloadSchema) => {
   try {
-    const response = await axios.post(
-      `https://virtserver.swaggerhub.com/HERUSETIAWAN_1/sosmed/1.0.0/posts`,
-      body
-    );
+    const response = await axiosWithConfig.post(`/posts`, body);
 
     return response.data as Response;
   } catch (error: any) {
@@ -42,10 +36,7 @@ export const addPosts = async (body: PostPayloadSchema) => {
 
 export const editPosts = async (post_id: string, body: PostPayloadSchema) => {
   try {
-    const response = await axios.put(
-      `https://virtserver.swaggerhub.com/HERUSETIAWAN_1/sosmed/1.0.0/posts/${post_id}`,
-      body
-    );
+    const response = await axiosWithConfig.put(`/posts/${post_id}`, body);
 
     return response.data as Response;
   } catch (error: any) {
@@ -55,9 +46,7 @@ export const editPosts = async (post_id: string, body: PostPayloadSchema) => {
 
 export const deletePosts = async (post_id: string) => {
   try {
-    const response = await axios.delete(
-      `https://virtserver.swaggerhub.com/HERUSETIAWAN_1/sosmed/1.0.0/posts/${post_id}`
-    );
+    const response = await axiosWithConfig.delete(`/posts/${post_id}`);
 
     return response.data as Response;
   } catch (error: any) {

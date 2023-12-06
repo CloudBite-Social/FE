@@ -1,5 +1,11 @@
-import { getPosts, getDetailPosts } from "./api";
-import { DetailPost, Post } from "./types";
+import {
+  getPosts,
+  getDetailPosts,
+  addPosts,
+  editPosts,
+  deletePosts,
+} from "./api";
+import { DetailPost, Post, PostPayloadSchema } from "./types";
 
-export { getPosts, getDetailPosts };
-export type { Post, DetailPost };
+export { getPosts, getDetailPosts, addPosts, editPosts, deletePosts };
+export type { Post, DetailPost, PostPayloadSchema };

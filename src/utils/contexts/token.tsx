@@ -70,7 +70,7 @@ export function TokenProvider({ children }: Readonly<Props>) {
 
   const changeToken = useCallback(
     (token?: string) => {
-      const newToken = token ?? ""; // const newToken = token ? token : "";
+      const newToken = token ?? "";
       setToken(newToken);
       if (token) {
         localStorage.setItem("token", newToken);

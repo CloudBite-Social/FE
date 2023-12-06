@@ -47,7 +47,6 @@ export default function Router() {
     {
       path: "*",
       element: <div>404 page not found</div>,
-
     },
   ]);
 

@@ -1,23 +1,21 @@
-import PostCard from "@/components/post-card";
-import Layout from "@/components/layout";
-
-import { SendHorizontalIcon, UploadIcon } from "lucide-react";
 import { useEffect, useState } from "react";
-import { getPosts } from "@/utils/apis/posts";
-
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+
 import { CustomFormField } from "@/components/CustomForm";
-import { Form } from "@/components/ui/form";
 import { useToast } from "@/components/ui/use-toast";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import PostCard from "@/components/post-card";
+import { Form } from "@/components/ui/form";
+import Layout from "@/components/layout";
 
-import { Loader2 } from "lucide-react";
-import { PostPayloadSchema, postPayloadSchema } from "@/utils/apis/posts/types";
-import { addPosts } from "@/utils/apis/posts/api";
+import { PostPayloadSchema, addPosts, getPosts } from "@/utils/apis/posts";
+import { postPayloadSchema } from "@/utils/apis/posts/types";
+
+import { Loader2, SendHorizontalIcon, UploadIcon } from "lucide-react";
 
 const Home = () => {
   const { toast } = useToast();
@@ -126,8 +124,8 @@ const Home = () => {
                 >
                   {form.formState.isSubmitting ? (
                     <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please
-                      wait
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      <p>Please wait</p>
                     </>
                   ) : (
                     <div className="flex gap-3 items-center cursor-pointer text-black dark:text-white">

@@ -4,7 +4,7 @@ import axiosWithConfig from "../axiosWithConfig";
 
 export const Register = async (body: RegisterSchema) => {
   try {
-    const response = await axiosWithConfig.post(`/register/`, body);
+    const response = await axiosWithConfig.post(`/register`, body);
 
     return response.data as Response;
   } catch (error: any) {
@@ -14,9 +14,9 @@ export const Register = async (body: RegisterSchema) => {
 
 export const Login = async (body: LoginSchema) => {
   try {
-    const response = await axiosWithConfig.post(`/login/`, body);
+    const response = await axiosWithConfig.post(`/login`, body);
 
-    return response.data as Response<{ token: string }>;
+    return response.data as Response;
   } catch (error: any) {
     throw Error(error.response.data.message);
   }
