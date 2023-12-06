@@ -5,7 +5,7 @@ import Login from "@/pages/auth/login";
 import Register from "@/pages/auth/register";
 import Profie from "@/pages/profiles";
 import EditProfile from "@/pages/profiles/edit-profile";
-import DetailPost from "@/pages/posts/detail";
+import DetailPosts from "@/pages/posts/detail";
 import HistoryPost from "@/pages/profiles/history-post";
 import ListPost from "@/pages/posts";
 
@@ -28,8 +28,8 @@ export default function Router() {
       element: <ListPost />,
     },
     {
-      path: "/detail-post",
-      element: <DetailPost />,
+      path: "/detail-post/:post_id",
+      element: <DetailPosts />,
     },
     {
       path: "/history-post",
