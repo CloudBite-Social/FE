@@ -11,7 +11,7 @@ const Layout = (props: Readonly<Props>) => {
   const { children } = props;
 
   return (
-    <div className="w-full h-screen flex flex-col bg-neutral-50 dark:bg-black font-inter transition-all duration-200 overflow-auto">
+    <div className="w-full h-screen flex flex-col font-inter transition-all overflow-auto">
       <Navbar />
       <div className="grow overflow-auto flex flex-col p-6">{children}</div>
       <Toaster />

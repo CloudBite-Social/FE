@@ -39,7 +39,7 @@ const MAX_FILE_SIZE = 5000000;
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png"];
 
 export const postPayloadSchema = z.object({
-  caption: z.string().max(280),
+  caption: z.string().min(3, { message: "Minimum 3 character" }).max(280),
   image: z
     .any()
     .refine((files) => files?.length == 1, "Image is required.")

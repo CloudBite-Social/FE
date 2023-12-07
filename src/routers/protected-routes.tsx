@@ -6,10 +6,11 @@ const ProtectedRoutes = () => {
   const { pathname } = useLocation();
   const { token } = useToken();
 
+  // udh login
   const authProtected = ["/login", "/register"];
+  // belum login
   const tokenProtected = ["/profile", "/edit-profile", "/history-post"];
 
-  console.log(pathname);
   if (authProtected.includes(pathname)) {
     if (token) return <Navigate to="/" />;
   }

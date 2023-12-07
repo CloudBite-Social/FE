@@ -29,7 +29,6 @@ const LoginForm = () => {
   async function onSubmit(data: LoginSchema) {
     try {
       const result = await Login(data);
-      console.log(result.data.token);
       changeToken(result.data.token);
       toast({ description: result.message });
 

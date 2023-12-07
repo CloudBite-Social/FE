@@ -53,16 +53,20 @@ const EditPostForm = (props: Props) => {
     },
     values: {
       caption: detailPost?.caption!,
-      image: detailPost?.image!,
+      image: "",
     },
   });
 
-  const fileRef = form.register("image", { required: true });
+  const fileRef = form.register("image", { required: false });
 
   async function onSubmit(data: PostPayloadSchema) {
-    data.image = data.image[0].name;
+    // data.image = data.image[0].name;
     try {
-      const result = await editPosts(post_id, data);
+      const formData = new FormData();
+      formData.append("image", data.image[0]);
+      formData.append("caption", data.caption);
+
+      const result = await editPosts(post_id, formData as any);
       toast({
         description: result.message,
       });

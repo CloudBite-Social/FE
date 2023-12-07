@@ -15,26 +15,25 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { MessageCircle, MoreVerticalIcon } from "lucide-react";
-import { Post, deletePosts } from "@/utils/apis/posts";
+import { deletePosts } from "@/utils/apis/posts";
+import { UserPosts } from "@/utils/apis/users";
 import { useToken } from "@/utils/contexts/token";
-import Alert from "@/components/alert";
 
 interface Props {
-  data: Post;
+  data: UserPosts;
 }
 
-const PostCard = (props: Props) => {
-  const { user, token } = useToken();
+const PostCardHistory = (props: Props) => {
+  const { data } = props;
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { data } = props;
+
+  const { user } = useToken();
 
   async function handleDeletePost(post_id: string) {
     try {
       const result = await deletePosts(post_id);
       toast({ description: result.message });
-
-      navigate("/");
     } catch (error: any) {
       toast({
         title: "Oops! Something went wrong.",
@@ -49,14 +48,14 @@ const PostCard = (props: Props) => {
       <div className="flex bg-white dark:bg-black border p-6 gap-4 rounded-lg justify-center shadow">
         <div className="flex-none">
           <img
-            src={data.user.image}
-            alt={data.user.name}
+            src={user.image}
+            alt={user.name}
             className="rounded-full w-12 h-12"
           />
         </div>
         <div className="flex flex-col gap-4 grow">
           <div>
-            <h1 className="font-medium">{data.user.name}</h1>
+            <h1 className="font-medium">{user.name}</h1>
             <p className=" text-neutral-500 font-light text-xs">
               {format(new Date(data.created_at), "dd MMM Y - p")}
             </p>
@@ -65,59 +64,53 @@ const PostCard = (props: Props) => {
           {data.image && (
             <img src={data.image} alt={data.image} className="rounded-lg" />
           )}
-          <div className="flex gap-1 cursor-pointer w-fit hover:text-indigo-300">
+          <div className="flex gap-1">
             <MessageCircle
+              className="cursor-pointer"
               onClick={() => navigate(`/detail-post/${data.post_id}`)}
             />
             <p>{data.comment_count}</p>
           </div>
           <hr />
           <Button
-            className="h-fit justify-start italic"
+            className="h-fit justify-start italic bg-neutral-100 text-black/50 hover:bg-neutral-300"
             onClick={() => navigate(`/detail-post/${data.post_id}`)}
           >
             Add comment...
           </Button>
         </div>
         <div>
-          {token && user.user_id === data.user.user_id && (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <div>
-                  <MoreVerticalIcon className="cursor-pointer" />
-                </div>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                className="mt-2 flex flex-col items-center"
-                align="end"
-              >
-                <DropdownMenuItem asChild>
-                  <CustomDialog
-                    description={
-                      <EditPostForm post_id={data.post_id.toString()} />
-                    }
-                  >
-                    <p className="dark:hover:bg-white/25 rounded px-10">Edit</p>
-                  </CustomDialog>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Alert
-                    title="Are you sure delete this post?"
-                    onAction={() => handleDeletePost(data.post_id.toString())}
-                  >
-                    <p className="dark:hover:bg-white/25 rounded px-8">
-                      Delete
-                    </p>
-                  </Alert>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <div>
+                <MoreVerticalIcon className="cursor-pointer" />
+              </div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="mt-2 flex flex-col" align="end">
+              <DropdownMenuItem asChild>
+                <CustomDialog
+                  description={
+                    <EditPostForm post_id={data.post_id.toString()} />
+                  }
+                >
+                  <p className="dark:hover:bg-white/25 rounded">Edit</p>
+                </CustomDialog>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <CustomDialog
+                  title="Are you sure delete this post?"
+                  onAction={() => handleDeletePost(data.post_id.toString())}
+                >
+                  <p className="dark:hover:bg-white/25 rounded">Delete</p>
+                </CustomDialog>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </div>
   );
 };
 
-export default PostCard;
+export default PostCardHistory;
