@@ -13,7 +13,7 @@ import { Form } from "@/components/ui/form";
 import Layout from "@/components/layout";
 
 import { PostPayloadSchema, addPosts, getPosts } from "@/utils/apis/posts";
-import { postPayloadSchema } from "@/utils/apis/posts/types";
+import { Post, postPayloadSchema } from "@/utils/apis/posts/types";
 
 import { Loader2, SendHorizontalIcon, UploadIcon } from "lucide-react";
 import { useToken } from "@/utils/contexts/token";
@@ -23,11 +23,9 @@ const Home = () => {
   const [posts, setPosts] = useState([]);
   const { token, user } = useToken();
   const { toast } = useToast();
-
+  
   const [url, setUrl] = useState("http://34.71.201.88/posts?start=0&limit=5");
   const [nextPage, setNextPage] = useState<string>();
-  console.log(nextPage);
-
   const [prevPage, setPrevPage] = useState<string>();
 
   useEffect(() => {
@@ -85,6 +83,14 @@ const Home = () => {
 
   return (
     <Layout>
+      <div className="w-full flex justify-center sticky top-0">
+        <input
+          type="text"
+          placeholder="Search"
+          onChange={(e) => setSearch(e.target.value)}
+          className="bg-white shadow px-4 py-2 rounded-full absolute"
+        />
+      </div>
       <div className="w-full flex flex-col items-center gap-8 transition-all">
         <div className="w-1/2 h-fit bg-white dark:bg-black rounded-lg p-6 border shadow">
           <Form {...form}>
