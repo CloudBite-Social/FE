@@ -148,7 +148,7 @@ const Home = () => {
             </form>
           </Form>
         </div>
-        {/* {posts
+        {posts
           .filter((item) => {
             if (search === "") {
               return item;
@@ -160,10 +160,10 @@ const Home = () => {
           })
           .map((post, i) => (
             <PostCard key={i} data={post} />
-          ))} */}
-        {posts.map((post, i) => (
+          ))}
+        {/* {posts.map((post, i) => (
           <PostCard key={i} data={post} />
-        ))}
+        ))} */}
       </div>
     </Layout>
   );
