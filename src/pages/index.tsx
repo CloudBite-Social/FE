@@ -19,10 +19,10 @@ import { Loader2, SendHorizontalIcon, UploadIcon } from "lucide-react";
 import { useToken } from "@/utils/contexts/token";
 
 const Home = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const [posts, setPosts] = useState([]);
+  const { token, user } = useToken();
   const { toast } = useToast();
-
-  const { token } = useToken();
 
   useEffect(() => {
     fetchData();
@@ -53,15 +53,17 @@ const Home = () => {
 
   async function onSubmit(data: PostPayloadSchema) {
     // data.image = data.image[0].name;
+    setIsLoading(true);
     try {
       const formData = new FormData();
-      formData.append("image", data.image[0]);
       formData.append("caption", data.caption);
+      formData.append("image", data.image[0]);
 
       const result = await addPosts(formData as any);
       toast({
         description: result.message,
       });
+      setIsLoading(false);
     } catch (error: any) {
       toast({
         title: "Oops! Something went wrong.",
@@ -82,12 +84,14 @@ const Home = () => {
             >
               <div className="flex items-start gap-4">
                 <div className="flex-none">
-                  <img
-                    src="https://github.com/shadcn.png"
-                    alt="johndoe"
-                    width={80}
-                    className="rounded-lg"
-                  />
+                  {token && (
+                    <img
+                      src={user.image}
+                      alt={user.name}
+                      width={80}
+                      className="rounded-lg"
+                    />
+                  )}
                 </div>
                 <div className="flex-auto mt-[-9px]">
                   <CustomFormField control={form.control} name="caption">
@@ -150,9 +154,18 @@ const Home = () => {
             </form>
           </Form>
         </div>
-        {posts.map((post, i) => (
-          <PostCard key={i} data={post} />
-        ))}
+        {isLoading ? (
+          <>
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            <p>Loading</p>
+          </>
+        ) : (
+          <>
+            {posts?.map((post, i) => (
+              <PostCard key={i} data={post} />
+            ))}
+          </>
+        )}
       </div>
     </Layout>
   );
