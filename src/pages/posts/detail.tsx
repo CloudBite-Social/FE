@@ -1,18 +1,31 @@
 import { useNavigate, useParams } from "react-router-dom";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { format } from "date-fns";
 
 import { DetailPost, getDetailPosts } from "@/utils/apis/posts";
 
+import { CustomFormField } from "@/components/CustomForm";
 import { useToast } from "@/components/ui/use-toast";
+import { Form } from "@/components/ui/form";
 import Layout from "@/components/layout";
 
 import {
   ChevronLeft,
+  Loader2,
   MoreVerticalIcon,
-  SendHorizonal,
+  SendHorizontalIcon,
   Trash2,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  CommentSchema,
+  addComments,
+  commentSchema,
+  deleteComments,
+} from "@/utils/apis/comments";
+import { Input } from "@/components/ui/input";
 
 const DetailPosts = () => {
   const navigate = useNavigate();
@@ -29,6 +42,44 @@ const DetailPosts = () => {
     try {
       const result = await getDetailPosts(params.post_id!);
       setDetailPosts(result.data);
+    } catch (error: any) {
+      toast({
+        title: "Oops! Something went wrong.",
+        description: error.toString(),
+        variant: "destructive",
+      });
+    }
+  }
+
+  const form = useForm<CommentSchema>({
+    resolver: zodResolver(commentSchema),
+    defaultValues: {
+      post_id: detailPosts?.post_id,
+      text: "",
+    },
+  });
+
+  async function onSubmit(data: CommentSchema) {
+    try {
+      const result = await addComments(data);
+      toast({
+        description: result.message,
+      });
+    } catch (error: any) {
+      toast({
+        title: "Oops! Something went wrong.",
+        description: error.toString(),
+        variant: "destructive",
+      });
+    }
+  }
+
+  async function handleDeleteComments(comment_id: string) {
+    try {
+      const result = await deleteComments(comment_id);
+      toast({ description: result.message });
+
+      navigate(`/detail-post/${comment_id}`);
     } catch (error: any) {
       toast({
         title: "Oops! Something went wrong.",
@@ -91,19 +142,53 @@ const DetailPosts = () => {
                     <p>{data.text}</p>
                   </div>
                   <div>
-                    <Trash2 />
+                    <Trash2
+                      className="cursor-pointer"
+                      onClick={() =>
+                        handleDeleteComments(data.comment_id.toString())
+                      }
+                    />
                   </div>
                 </div>
               ))}
             </div>
-            <div className="flex gap-20 items-center">
-              <input
-                className="w-full h-fit justify-start italic bg-neutral-100 text-black/50 hover:bg-neutral-300 px-4 py-1 rounded-lg outline-none"
-                placeholder="Add comment..."
-              />
-
-              <SendHorizonal size={35} />
-            </div>
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)}>
+                <div className="flex items-center gap-6">
+                  <div className="flex-auto">
+                    <CustomFormField control={form.control} name="text">
+                      {(field) => (
+                        <Input
+                          {...field}
+                          placeholder="Add comment..."
+                          className="border-none bg-neutral-200/40 rounded-xl placeholder:italic px-4"
+                          disabled={form.formState.isSubmitting}
+                          aria-disabled={form.formState.isSubmitting}
+                        />
+                      )}
+                    </CustomFormField>
+                  </div>
+                  <Button
+                    className="bg-neutral-50 dark:bg-black outline-none hover:bg-white"
+                    type="submit"
+                    disabled={form.formState.isSubmitting}
+                    aria-disabled={form.formState.isSubmitting}
+                  >
+                    {form.formState.isSubmitting ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        <p>Please wait</p>
+                      </>
+                    ) : (
+                      <div className="flex gap-3 items-center cursor-pointer text-black dark:text-white">
+                        <SendHorizontalIcon />
+                        <p>Post</p>
+                      </div>
+                    )}
+                  </Button>
+                </div>
+              </form>
+            </Form>
           </div>
           <div>
             <MoreVerticalIcon />
