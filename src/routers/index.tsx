@@ -28,7 +28,7 @@ export default function Router() {
           element: <Register />,
         },
         {
-          path: "/list-post",
+          path: "/list-post/:keyword",
           element: <ListPost />,
         },
         {

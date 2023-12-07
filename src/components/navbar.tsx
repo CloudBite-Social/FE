@@ -14,9 +14,11 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useToast } from "@/components/ui/use-toast";
 
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Search } from "lucide-react";
+import { useState } from "react";
 
 const Navbar = () => {
+  const [keywords, setKeywords] = useState("");
   const { setTheme, theme } = useTheme();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -34,6 +36,7 @@ const Navbar = () => {
       description: "Logout Successfully",
     });
   }
+
   return (
     <header className="w-full sticky top-0">
       <nav className="flex py-4 px-6 xl:px-32 items-center justify-between border mx-auto">
@@ -43,13 +46,28 @@ const Navbar = () => {
             <span className="text-[#6224C3] font-black">bite</span>
           </h1>
         </Link>
+        <div className="flex items-center gap-4 border rounded-full py-1 px-2 shadow shadow-border w-1/2">
+          <Search
+            onClick={() => {
+              navigate(`/list-post/${keywords}`);
+            }}
+          />
+          <div className="flex-auto">
+            <input
+              type="text"
+              placeholder="Search for posts here..."
+              onChange={(e) => setKeywords(e.target.value)}
+              className="rounded-full py-1 px-2 outline-none bg-transparent placeholder:italic w-full"
+            />
+          </div>
+        </div>
         <div className="flex items-center gap-3 border rounded-full py-1 px-2 shadow shadow-border">
           <Avatar>
             <AvatarImage src={user.image} />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
           <div>
-            <h1 className="font-medium leading-none mb-1">
+            <h1 className="font-medium leading-none mb-1 truncate">
               {user.name || "Guest"}
             </h1>
             <p className="text-xs font-light leading-none">
