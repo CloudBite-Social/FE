@@ -1,30 +1,44 @@
-# React + TypeScript + Vite
+# Cloudbite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Social Media Project
 
-Currently, two official plugins are available:
+[![TypeScript](https://badgen.net/badge/icon/typescript?icon=typescript&label)](https://typescriptlang.org)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Cloudbite is modern social media for Gen Z who wanna post some activites with text and image, also can add comment in friend's post.
 
-## Expanding the ESLint configuration
+## Features
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- Posting with image, edit posting, and delete posting
+- Comment, edit comment, and delete comment
+- Edit profile and delete profile
 
-- Configure the top-level `parserOptions` property like this:
+## Tech
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+Cloudbite uses a number of open source projects to work properly:
+
+- [React] - HTML enhanced for web apps!
+- [Visual Studio Code] - Awesome web-based text editor
+- [Tailwind] - Great UI boilerplate for modern web apps
+- [Shadcn] - Library kit UI for beautiful style
+- [Golang] - evented I/O for the backend
+
+## Installation
+
+CloudBite requires [Vite](https://vitejs.dev/guide/) to run.
+
+Install the dependencies and devDependencies and start the server.
+
+```sh
+$ cd cloudbite
+$ npm create vite@latest
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+For production environments...
+
+```sh
+$ npx degit user/project#main my-project
+$ cd my-project
+
+$ npm install
+$ npm run dev
+```
