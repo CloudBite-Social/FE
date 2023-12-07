@@ -24,14 +24,26 @@ const Home = () => {
   const { token, user } = useToken();
   const { toast } = useToast();
 
+  const [url, setUrl] = useState("http://34.71.201.88/posts?start=0&limit=5");
+  const [nextPage, setNextPage] = useState<string>();
+  console.log(nextPage);
+
+  const [prevPage, setPrevPage] = useState<string>();
+
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [url]);
 
   async function fetchData() {
+    setIsLoading(true);
     try {
-      const result = await getPosts();
+      const result = await getPosts(url);
+
+      setNextPage(result.pagination.next);
+      setPrevPage(result.pagination.prev);
       setPosts(result.data);
+
+      setIsLoading(false);
     } catch (error: any) {
       toast({
         title: "Oops! Something went wrong.",
@@ -53,7 +65,6 @@ const Home = () => {
 
   async function onSubmit(data: PostPayloadSchema) {
     // data.image = data.image[0].name;
-    setIsLoading(true);
     try {
       const formData = new FormData();
       formData.append("caption", data.caption);
@@ -63,7 +74,6 @@ const Home = () => {
       toast({
         description: result.message,
       });
-      setIsLoading(false);
     } catch (error: any) {
       toast({
         title: "Oops! Something went wrong.",
@@ -165,6 +175,12 @@ const Home = () => {
               <PostCard key={i} data={post} />
             ))}
           </>
+        )}
+        {prevPage !== null && (
+          <Button onClick={() => setUrl(prevPage!)}>Back</Button>
+        )}
+        {nextPage !== null && (
+          <Button onClick={() => setUrl(nextPage!)}>Load more</Button>
         )}
       </div>
     </Layout>

@@ -19,7 +19,7 @@ const RegisterForm = () => {
   const form = useForm<RegisterSchema>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
-      username: "",
+      name: "",
       email: "",
       password: "",
       repassword: "",
@@ -47,11 +47,7 @@ const RegisterForm = () => {
         className="w-full flex flex-col gap-2"
         onSubmit={form.handleSubmit(onSubmit)}
       >
-        <CustomFormField
-          control={form.control}
-          name="username"
-          label="Full Name"
-        >
+        <CustomFormField control={form.control} name="name" label="Full Name">
           {(field) => (
             <Input
               {...field}

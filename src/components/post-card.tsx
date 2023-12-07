@@ -17,16 +17,17 @@ import {
 import { MessageCircle, MoreVerticalIcon } from "lucide-react";
 import { Post, deletePosts } from "@/utils/apis/posts";
 import { useToken } from "@/utils/contexts/token";
+import Alert from "@/components/alert";
 
 interface Props {
   data: Post;
 }
 
 const PostCard = (props: Props) => {
+  const { user, token } = useToken();
   const navigate = useNavigate();
   const { toast } = useToast();
   const { data } = props;
-  const { user, token } = useToken();
 
   async function handleDeletePost(post_id: string) {
     try {
@@ -66,14 +67,14 @@ const PostCard = (props: Props) => {
           )}
           <div className="flex gap-1 cursor-pointer w-fit hover:text-indigo-300">
             <MessageCircle
-              onClick={() => navigate(`/detail-post/:${data.post_id}`)}
+              onClick={() => navigate(`/detail-post/${data.post_id}`)}
             />
             <p>{data.comment_count}</p>
           </div>
           <hr />
           <Button
             className="h-fit justify-start italic"
-            onClick={() => navigate(`/detail-post/:${data.post_id}`)}
+            onClick={() => navigate(`/detail-post/${data.post_id}`)}
           >
             Add comment...
           </Button>
@@ -86,24 +87,29 @@ const PostCard = (props: Props) => {
                   <MoreVerticalIcon className="cursor-pointer" />
                 </div>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="mt-2 flex flex-col" align="end">
+              <DropdownMenuContent
+                className="mt-2 flex flex-col items-center"
+                align="end"
+              >
                 <DropdownMenuItem asChild>
                   <CustomDialog
                     description={
                       <EditPostForm post_id={data.post_id.toString()} />
                     }
                   >
-                    <p className="dark:hover:bg-white/25 rounded">Edit</p>
+                    <p className="dark:hover:bg-white/25 rounded px-10">Edit</p>
                   </CustomDialog>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                  <CustomDialog
+                  <Alert
                     title="Are you sure delete this post?"
                     onAction={() => handleDeletePost(data.post_id.toString())}
                   >
-                    <p className="dark:hover:bg-white/25 rounded">Delete</p>
-                  </CustomDialog>
+                    <p className="dark:hover:bg-white/25 rounded px-8">
+                      Delete
+                    </p>
+                  </Alert>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

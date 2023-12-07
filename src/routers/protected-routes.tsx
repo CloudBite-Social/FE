@@ -6,7 +6,9 @@ const ProtectedRoutes = () => {
   const { pathname } = useLocation();
   const { token } = useToken();
 
+  // udh login
   const authProtected = ["/login", "/register"];
+  // belum login
   const tokenProtected = ["/profile", "/edit-profile", "/history-post"];
 
   if (authProtected.includes(pathname)) {

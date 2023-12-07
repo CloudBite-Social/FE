@@ -21,23 +21,25 @@ import {
   UpdateUserSchema,
   updateUserSchema,
 } from "@/utils/apis/users";
-import { Loader2, Trash2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 const EditProfile = () => {
-  const { toast } = useToast();
-  const navigate = useNavigate();
-  const { changeToken, user } = useToken();
-
   const [profile, setProfile] = useState<User>();
+  const [isLoading, setIsLoading] = useState(false);
+  const { changeToken, user } = useToken();
+  const navigate = useNavigate();
+  const { toast } = useToast();
 
   useEffect(() => {
     fetchData();
   }, []);
 
   async function fetchData() {
+    setIsLoading(true);
     try {
       const result = await getUser();
       setProfile(result.data);
+      setIsLoading(false);
     } catch (error: any) {
       toast({
         title: "Oops! Something went wrong.",
@@ -103,110 +105,126 @@ const EditProfile = () => {
 
   return (
     <Layout>
-      <div className="container flex justify-end">
-        <Alert
-          title="Are you absolutely sure?"
-          description="This action cannot be undone. This will permanently delete your account and remove your data from our servers."
-          onAction={handleDeleteProfile}
-        >
-          <div className="p-3 rounded-md shadow-md hover:bg-red-500 dark:hover:bg-red-900 dark:border">
-            <Trash2 />
-          </div>
-        </Alert>
-      </div>
       <div className="h-full flex flex-col items-center justify-center gap-5">
-        <div className="flex w-full md:w-2/3 lg:w-1/2 justify-between">
-          <h1 className="text-4xl">Edit Profile</h1>
-          <img src={user.image} alt="" className="rounded-full w-24 h-24" />
-        </div>
-        <Form {...form}>
-          <form
-            className="w-full md:w-2/3 lg:w-1/2 flex flex-col gap-4"
-            onSubmit={form.handleSubmit(onSubmit)}
-          >
-            <CustomFormField
-              control={form.control}
-              name="name"
-              label="Full Name"
-            >
-              {(field) => (
-                <Input
-                  {...field}
-                  placeholder={profile?.name}
-                  type="text"
-                  disabled={form.formState.isSubmitting}
-                  aria-disabled={form.formState.isSubmitting}
-                />
-              )}
-            </CustomFormField>
-            <CustomFormField
-              control={form.control}
-              name="image"
-              label="Profile Picture"
-            >
-              {() => (
-                <Input
-                  {...fileRef}
-                  type="file"
-                  accept="image/jpg, image/jpeg, image/png"
-                  className="cursor-pointer"
-                  disabled={form.formState.isSubmitting}
-                  aria-disabled={form.formState.isSubmitting}
-                />
-              )}
-            </CustomFormField>
-            <CustomFormField control={form.control} name="email" label="Email">
-              {(field) => (
-                <Input
-                  {...field}
-                  placeholder={profile?.email}
-                  type="email"
-                  disabled={form.formState.isSubmitting}
-                  aria-disabled={form.formState.isSubmitting}
-                />
-              )}
-            </CustomFormField>
-            <CustomFormField
-              control={form.control}
-              name="password"
-              label="Password"
-            >
-              {(field) => (
-                <Input
-                  {...field}
-                  placeholder={profile?.password}
-                  type="password"
-                  disabled={form.formState.isSubmitting}
-                  aria-disabled={form.formState.isSubmitting}
-                />
-              )}
-            </CustomFormField>
-            <div className="flex gap-6">
-              <Button
-                className="bg-white text-black border h-fit hover:bg-gray-200 hover:text-black mt-4"
-                type="button"
-                onClick={() => navigate("/profile")}
-              >
-                Cancel
-              </Button>
-              <Button
-                className="mt-4"
-                type="submit"
-                disabled={form.formState.isSubmitting}
-                aria-disabled={form.formState.isSubmitting}
-              >
-                {form.formState.isSubmitting ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please
-                    wait
-                  </>
-                ) : (
-                  "Save"
-                )}
-              </Button>
+        {isLoading ? (
+          <div className="flex items-center">
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            <p>Loading</p>
+          </div>
+        ) : (
+          <>
+            <div className="flex w-full md:w-2/3 lg:w-1/2 justify-between">
+              <h1 className="text-4xl font-semibold">Edit Profile</h1>
+              <img src={user.image} alt="" className="rounded-full w-24 h-24" />
             </div>
-          </form>
-        </Form>
+            <Form {...form}>
+              <form
+                className="w-full md:w-2/3 lg:w-1/2 flex flex-col gap-4"
+                onSubmit={form.handleSubmit(onSubmit)}
+              >
+                <CustomFormField
+                  control={form.control}
+                  name="name"
+                  label="Full Name"
+                >
+                  {(field) => (
+                    <Input
+                      {...field}
+                      placeholder={profile?.name}
+                      type="text"
+                      disabled={form.formState.isSubmitting}
+                      aria-disabled={form.formState.isSubmitting}
+                    />
+                  )}
+                </CustomFormField>
+                <CustomFormField
+                  control={form.control}
+                  name="image"
+                  label="Profile Picture"
+                >
+                  {() => (
+                    <Input
+                      {...fileRef}
+                      type="file"
+                      accept="image/jpg, image/jpeg, image/png"
+                      className="cursor-pointer"
+                      disabled={form.formState.isSubmitting}
+                      aria-disabled={form.formState.isSubmitting}
+                    />
+                  )}
+                </CustomFormField>
+                <CustomFormField
+                  control={form.control}
+                  name="email"
+                  label="Email"
+                >
+                  {(field) => (
+                    <Input
+                      {...field}
+                      placeholder={profile?.email}
+                      type="email"
+                      disabled={form.formState.isSubmitting}
+                      aria-disabled={form.formState.isSubmitting}
+                    />
+                  )}
+                </CustomFormField>
+                <CustomFormField
+                  control={form.control}
+                  name="password"
+                  label="Password"
+                >
+                  {(field) => (
+                    <Input
+                      {...field}
+                      placeholder={profile?.password}
+                      type="password"
+                      disabled={form.formState.isSubmitting}
+                      aria-disabled={form.formState.isSubmitting}
+                    />
+                  )}
+                </CustomFormField>
+                <div className="flex items-center justify-between mt-4">
+                  <div className="flex items-center gap-6">
+                    <Button
+                      className="bg-white text-black border h-fit hover:bg-gray-200 hover:text-black shadow-md"
+                      type="button"
+                      onClick={() => navigate("/profile")}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      className="h-fit border shadow-md"
+                      type="submit"
+                      disabled={form.formState.isSubmitting}
+                      aria-disabled={form.formState.isSubmitting}
+                    >
+                      {form.formState.isSubmitting ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />{" "}
+                          Please wait
+                        </>
+                      ) : (
+                        "Save"
+                      )}
+                    </Button>
+                  </div>
+                  <Button
+                    className="bg-white text-black border h-fit hover:bg-gray-200 hover:text-black border-red-500 shadow-md"
+                    type="button"
+                  >
+                    <Alert
+                      title="Are you absolutely sure?"
+                      description="This action cannot be undone. This will permanently delete your account and remove your data from our servers."
+                      onAction={handleDeleteProfile}
+                    >
+                      <p className="text-red-500">Delete Account</p>
+                    </Alert>
+                  </Button>
+                </div>
+              </form>
+            </Form>
+          </>
+        )}
       </div>
     </Layout>
   );

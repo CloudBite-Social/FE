@@ -67,14 +67,14 @@ const PostCardHistory = (props: Props) => {
           <div className="flex gap-1">
             <MessageCircle
               className="cursor-pointer"
-              onClick={() => navigate(`/detail-post/:${data.post_id}`)}
+              onClick={() => navigate(`/detail-post/${data.post_id}`)}
             />
             <p>{data.comment_count}</p>
           </div>
           <hr />
           <Button
             className="h-fit justify-start italic bg-neutral-100 text-black/50 hover:bg-neutral-300"
-            onClick={() => navigate(`/detail-post/:${data.post_id}`)}
+            onClick={() => navigate(`/detail-post/${data.post_id}`)}
           >
             Add comment...
           </Button>
