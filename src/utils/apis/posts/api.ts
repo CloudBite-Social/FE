@@ -2,6 +2,7 @@ import { Response, ResponsePagination } from "@/utils/types/api";
 import axiosWithConfig from "../axiosWithConfig";
 import { PostPayloadSchema } from "./types";
 
+
 export const getPosts = async (url: string) => {
   try {
     const response = await axiosWithConfig.get(url);
