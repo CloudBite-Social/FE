@@ -47,12 +47,16 @@ const Home = () => {
     },
   });
 
-  const fileRef = form.register("image", { required: true });
+  const fileRef = form.register("image", { required: false });
 
   async function onSubmit(data: PostPayloadSchema) {
-    data.image = data.image[0].name;
+    // data.image = data.image[0].name;
     try {
-      const result = await addPosts(data);
+      const formData = new FormData();
+      formData.append("image", data.image[0]);
+      formData.append("caption", data.caption);
+
+      const result = await addPosts(formData as any);
       toast({
         description: result.message,
       });
@@ -89,7 +93,7 @@ const Home = () => {
                       <Textarea
                         {...field}
                         placeholder="What’s up?"
-                        className="resize-none"
+                        className="resize-none border-none"
                         disabled={form.formState.isSubmitting}
                         aria-disabled={form.formState.isSubmitting}
                       />
@@ -99,17 +103,24 @@ const Home = () => {
               </div>
               <hr />
               <div className="w-full flex justify-between items-center">
-                <div className="flex items-center">
-                  <div className="flex items-center justify-center rounded-md p-2 bg-neutral-100 dark:bg-black dark:border">
-                    <UploadIcon />
-                  </div>
+                <div className="flex items-center gap-4">
+                  <label
+                    htmlFor="input-file"
+                    className="flex items-center gap-2"
+                  >
+                    <div className="flex items-center justify-center rounded-md p-2 bg-[#6224C3] dark:bg-[#6224C3] dark:border text-white">
+                      <UploadIcon />
+                    </div>
+                    <p>Upload Image</p>
+                  </label>
                   <CustomFormField control={form.control} name="image">
                     {() => (
                       <Input
                         {...fileRef}
                         type="file"
+                        id="input-file"
                         accept="image/jpg, image/jpeg, image/png"
-                        className="cursor-pointer text-black/50 dark:text-white/50 bg-white dark:bg-black border-none"
+                        className="cursor-pointer text-black/50 dark:text-white/50 bg-white dark:bg-black border-none hidden"
                         disabled={form.formState.isSubmitting}
                         aria-disabled={form.formState.isSubmitting}
                       />
@@ -117,7 +128,6 @@ const Home = () => {
                   </CustomFormField>
                 </div>
                 <Button
-                  className="bg-white dark:bg-black outline-none hover:bg-white"
                   type="submit"
                   disabled={form.formState.isSubmitting}
                   aria-disabled={form.formState.isSubmitting}
@@ -128,7 +138,7 @@ const Home = () => {
                       <p>Please wait</p>
                     </>
                   ) : (
-                    <div className="flex gap-3 items-center cursor-pointer text-black dark:text-white">
+                    <div className="flex gap-3 items-center cursor-pointer ">
                       <SendHorizontalIcon />
                       <p>Post</p>
                     </div>

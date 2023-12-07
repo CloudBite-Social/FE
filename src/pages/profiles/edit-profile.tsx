@@ -29,7 +29,6 @@ const EditProfile = () => {
   // const { changeToken } = useToken();
 
   const [profile, setProfile] = useState<User>();
-  console.log(profile);
 
   useEffect(() => {
     fetchData();
@@ -60,16 +59,22 @@ const EditProfile = () => {
       name: profile?.name!,
       email: profile?.email!,
       password: profile?.password!,
-      image: profile?.image!,
+      image: "",
     },
   });
 
-  const fileRef = form.register("image", { required: true });
+  const fileRef = form.register("image", { required: false });
 
   async function onSubmit(data: UpdateUserSchema) {
-    data.image = data.image[0].name;
+    // data.image = data.image[0].name;
     try {
-      const result = await updateUser(data);
+      const formData = new FormData();
+      formData.append("name", data.name);
+      formData.append("email", data.email);
+      formData.append("password", data.password);
+      formData.append("image", data.image[0]);
+
+      const result = await updateUser(formData as any);
       toast({ description: result.message });
     } catch (error: any) {
       toast({
