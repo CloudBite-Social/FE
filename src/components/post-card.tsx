@@ -16,15 +16,17 @@ import {
 
 import { MessageCircle, MoreVerticalIcon } from "lucide-react";
 import { Post, deletePosts } from "@/utils/apis/posts";
+import { useToken } from "@/utils/contexts/token";
 
 interface Props {
   data: Post;
 }
 
 const PostCard = (props: Props) => {
-  const { data } = props;
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { data } = props;
+  const { user, token } = useToken();
 
   async function handleDeletePost(post_id: string) {
     try {
@@ -62,49 +64,50 @@ const PostCard = (props: Props) => {
           {data.image && (
             <img src={data.image} alt={data.image} className="rounded-lg" />
           )}
-          <div className="flex gap-1">
+          <div className="flex gap-1 cursor-pointer w-fit hover:text-indigo-300">
             <MessageCircle
-              className="cursor-pointer"
               onClick={() => navigate(`/detail-post/:${data.post_id}`)}
             />
             <p>{data.comment_count}</p>
           </div>
           <hr />
           <Button
-            className="h-fit justify-start italic bg-neutral-100 text-black/50 hover:bg-neutral-300"
+            className="h-fit justify-start italic"
             onClick={() => navigate(`/detail-post/:${data.post_id}`)}
           >
             Add comment...
           </Button>
         </div>
         <div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <div>
-                <MoreVerticalIcon className="cursor-pointer" />
-              </div>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="mt-2 flex flex-col" align="end">
-              <DropdownMenuItem asChild>
-                <CustomDialog
-                  description={
-                    <EditPostForm post_id={data.post_id.toString()} />
-                  }
-                >
-                  <p className="dark:hover:bg-white/25 rounded">Edit</p>
-                </CustomDialog>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <CustomDialog
-                  title="Are you sure delete this post?"
-                  onAction={() => handleDeletePost(data.post_id.toString())}
-                >
-                  <p className="dark:hover:bg-white/25 rounded">Delete</p>
-                </CustomDialog>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          {token && user.user_id === data.user.user_id && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <div>
+                  <MoreVerticalIcon className="cursor-pointer" />
+                </div>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="mt-2 flex flex-col" align="end">
+                <DropdownMenuItem asChild>
+                  <CustomDialog
+                    description={
+                      <EditPostForm post_id={data.post_id.toString()} />
+                    }
+                  >
+                    <p className="dark:hover:bg-white/25 rounded">Edit</p>
+                  </CustomDialog>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <CustomDialog
+                    title="Are you sure delete this post?"
+                    onAction={() => handleDeletePost(data.post_id.toString())}
+                  >
+                    <p className="dark:hover:bg-white/25 rounded">Delete</p>
+                  </CustomDialog>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
         </div>
       </div>
     </div>

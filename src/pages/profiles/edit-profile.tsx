@@ -1,11 +1,15 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
+import { useToken } from "@/utils/contexts/token";
+
+import { CustomFormField } from "@/components/CustomForm";
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Form } from "@/components/ui/form";
 import Layout from "@/components/layout";
 import Alert from "@/components/alert";
 
@@ -17,16 +21,12 @@ import {
   UpdateUserSchema,
   updateUserSchema,
 } from "@/utils/apis/users";
-
-import { CircleUserIcon, Loader2, Trash2 } from "lucide-react";
-import { Form } from "@/components/ui/form";
-import { CustomFormField } from "@/components/CustomForm";
-// import { useToken } from "@/utils/context/token";
+import { Loader2, Trash2 } from "lucide-react";
 
 const EditProfile = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
-  // const { changeToken } = useToken();
+  const { changeToken, user } = useToken();
 
   const [profile, setProfile] = useState<User>();
 
@@ -89,7 +89,8 @@ const EditProfile = () => {
     try {
       const result = await deleteUser();
       toast({ description: result.message });
-      // changeToken();
+      changeToken();
+
       navigate("/");
     } catch (error: any) {
       toast({
@@ -116,7 +117,7 @@ const EditProfile = () => {
       <div className="h-full flex flex-col items-center justify-center gap-5">
         <div className="flex w-full md:w-2/3 lg:w-1/2 justify-between">
           <h1 className="text-4xl">Edit Profile</h1>
-          <CircleUserIcon strokeWidth={1} size={80} />
+          <img src={user.image} alt="" className="rounded-full w-24 h-24" />
         </div>
         <Form {...form}>
           <form

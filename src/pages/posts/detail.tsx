@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { format } from "date-fns";
 
-import { DetailPost, getDetailPosts } from "@/utils/apis/posts";
+import { DetailPost, deletePosts, getDetailPosts } from "@/utils/apis/posts";
 
 import { CustomFormField } from "@/components/CustomForm";
 import { useToast } from "@/components/ui/use-toast";
@@ -18,6 +18,15 @@ import {
   SendHorizontalIcon,
   Trash2,
 } from "lucide-react";
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
 import { Button } from "@/components/ui/button";
 import {
   CommentSchema,
@@ -26,9 +35,13 @@ import {
   deleteComments,
 } from "@/utils/apis/comments";
 import { Input } from "@/components/ui/input";
+import CustomDialog from "@/components/dialog";
+import EditPostForm from "@/components/form/edit-post-form";
+import { useToken } from "@/utils/contexts/token";
 
 const DetailPosts = () => {
   const navigate = useNavigate();
+  const { token, user } = useToken();
   const { toast } = useToast();
   const params = useParams();
 
@@ -62,6 +75,7 @@ const DetailPosts = () => {
   async function onSubmit(data: CommentSchema) {
     try {
       const result = await addComments(data);
+      console.log(result.message);
       toast({
         description: result.message,
       });
@@ -89,13 +103,31 @@ const DetailPosts = () => {
     }
   }
 
+  async function handleDeletePost(post_id: string) {
+    try {
+      const result = await deletePosts(post_id);
+      toast({ description: result.message });
+
+      navigate("/");
+    } catch (error: any) {
+      toast({
+        title: "Oops! Something went wrong.",
+        description: error.toString(),
+        variant: "destructive",
+      });
+    }
+  }
+
   return (
     <Layout>
       <div className="w-full flex flex-col items-center gap-8">
-        <div className="w-[60%] h-fit flex p-5 gap-3 rounded-md justify-center">
-          <div className="flex-none h-fit mr-4 rounded-md bg-white hover:bg-black/5 dark:bg-black dark:hover:bg-white/10 shadow border mx-3 cursor-pointer">
-            <ChevronLeft size={40} onClick={() => navigate(-1)} />
-          </div>
+        <div className="w-fit xl:w-[60%] h-fit flex p-5 gap-3 rounded-md justify-center">
+          <Button
+            className="w-fit py-0 px-1 h-fit mr-4 rounded-md shadow border"
+            onClick={() => navigate(-1)}
+          >
+            <ChevronLeft size={40} />
+          </Button>
           <div className="flex-none">
             <img
               src={detailPosts?.user.image}
@@ -142,12 +174,14 @@ const DetailPosts = () => {
                     <p>{data.text}</p>
                   </div>
                   <div>
-                    <Trash2
-                      className="cursor-pointer"
-                      onClick={() =>
-                        handleDeleteComments(data.comment_id.toString())
-                      }
-                    />
+                    {token && user.user_id == detailPosts?.user.user_id && (
+                      <Trash2
+                        className="cursor-pointer"
+                        onClick={() =>
+                          handleDeleteComments(data.comment_id.toString())
+                        }
+                      />
+                    )}
                   </div>
                 </div>
               ))}
@@ -162,7 +196,7 @@ const DetailPosts = () => {
                           {...field}
                           placeholder="Add comment..."
                           className="border-none bg-neutral-200/40 rounded-xl placeholder:italic px-4"
-                          disabled={form.formState.isSubmitting}
+                          disabled={!token || form.formState.isSubmitting}
                           aria-disabled={form.formState.isSubmitting}
                         />
                       )}
@@ -171,7 +205,7 @@ const DetailPosts = () => {
                   <Button
                     className="bg-neutral-50 dark:bg-black outline-none hover:bg-white"
                     type="submit"
-                    disabled={form.formState.isSubmitting}
+                    disabled={!token || form.formState.isSubmitting}
                     aria-disabled={form.formState.isSubmitting}
                   >
                     {form.formState.isSubmitting ? (
@@ -191,7 +225,39 @@ const DetailPosts = () => {
             </Form>
           </div>
           <div>
-            <MoreVerticalIcon />
+            {token && user.user_id == detailPosts?.user.user_id && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <div>
+                    <MoreVerticalIcon className="cursor-pointer" />
+                  </div>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="mt-2 flex flex-col" align="end">
+                  <DropdownMenuItem asChild>
+                    <CustomDialog
+                      description={
+                        <EditPostForm
+                          post_id={detailPosts?.post_id.toString()!}
+                        />
+                      }
+                    >
+                      <p className="dark:hover:bg-white/25 rounded">Edit</p>
+                    </CustomDialog>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <CustomDialog
+                      title="Are you sure delete this post?"
+                      onAction={() =>
+                        handleDeletePost(detailPosts?.post_id.toString()!)
+                      }
+                    >
+                      <p className="dark:hover:bg-white/25 rounded">Delete</p>
+                    </CustomDialog>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
           </div>
         </div>
       </div>

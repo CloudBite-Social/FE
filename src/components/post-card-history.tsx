@@ -17,15 +17,18 @@ import {
 import { MessageCircle, MoreVerticalIcon } from "lucide-react";
 import { deletePosts } from "@/utils/apis/posts";
 import { UserPosts } from "@/utils/apis/users";
+import { useToken } from "@/utils/contexts/token";
 
 interface Props {
   data: UserPosts;
 }
 
-const PostCardDetail = (props: Props) => {
+const PostCardHistory = (props: Props) => {
   const { data } = props;
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  const { user } = useToken();
 
   async function handleDeletePost(post_id: string) {
     try {
@@ -45,14 +48,14 @@ const PostCardDetail = (props: Props) => {
       <div className="flex bg-white dark:bg-black border p-6 gap-4 rounded-lg justify-center shadow">
         <div className="flex-none">
           <img
-            src="https://github.com/shadcn.png"
-            alt="johndoe"
+            src={user.image}
+            alt={user.name}
             className="rounded-full w-12 h-12"
           />
         </div>
         <div className="flex flex-col gap-4 grow">
           <div>
-            <h1 className="font-medium">John Doe</h1>
+            <h1 className="font-medium">{user.name}</h1>
             <p className=" text-neutral-500 font-light text-xs">
               {format(new Date(data.created_at), "dd MMM Y - p")}
             </p>
@@ -110,4 +113,4 @@ const PostCardDetail = (props: Props) => {
   );
 };
 
-export default PostCardDetail;
+export default PostCardHistory;

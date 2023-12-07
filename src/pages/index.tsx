@@ -16,11 +16,13 @@ import { PostPayloadSchema, addPosts, getPosts } from "@/utils/apis/posts";
 import { postPayloadSchema } from "@/utils/apis/posts/types";
 
 import { Loader2, SendHorizontalIcon, UploadIcon } from "lucide-react";
+import { useToken } from "@/utils/contexts/token";
 
 const Home = () => {
+  const [posts, setPosts] = useState([]);
   const { toast } = useToast();
 
-  const [posts, setPosts] = useState([]);
+  const { token } = useToken();
 
   useEffect(() => {
     fetchData();
@@ -94,7 +96,7 @@ const Home = () => {
                         {...field}
                         placeholder="What’s up?"
                         className="resize-none border-none"
-                        disabled={form.formState.isSubmitting}
+                        disabled={!token || form.formState.isSubmitting}
                         aria-disabled={form.formState.isSubmitting}
                       />
                     )}
@@ -121,7 +123,7 @@ const Home = () => {
                         id="input-file"
                         accept="image/jpg, image/jpeg, image/png"
                         className="cursor-pointer text-black/50 dark:text-white/50 bg-white dark:bg-black border-none hidden"
-                        disabled={form.formState.isSubmitting}
+                        disabled={!token || form.formState.isSubmitting}
                         aria-disabled={form.formState.isSubmitting}
                       />
                     )}
@@ -129,7 +131,7 @@ const Home = () => {
                 </div>
                 <Button
                   type="submit"
-                  disabled={form.formState.isSubmitting}
+                  disabled={!token || form.formState.isSubmitting}
                   aria-disabled={form.formState.isSubmitting}
                 >
                   {form.formState.isSubmitting ? (

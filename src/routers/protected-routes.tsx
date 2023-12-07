@@ -9,7 +9,6 @@ const ProtectedRoutes = () => {
   const authProtected = ["/login", "/register"];
   const tokenProtected = ["/profile", "/edit-profile", "/history-post"];
 
-  console.log(pathname);
   if (authProtected.includes(pathname)) {
     if (token) return <Navigate to="/" />;
   }

@@ -7,11 +7,13 @@ import Layout from "@/components/layout";
 
 import { User, getUser } from "@/utils/apis/users";
 
-import { CircleUserIcon } from "lucide-react";
+import { useToken } from "@/utils/contexts/token";
 
 const Profie = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
+
+  const { user } = useToken();
 
   const [profile, setProfile] = useState<User>();
 
@@ -36,7 +38,7 @@ const Profie = () => {
       <div className="h-full flex flex-col items-center justify-center space-y-5">
         <div className="flex w-full md:w-2/3 lg:w-1/2 justify-between">
           <h1 className="text-4xl">Profile</h1>
-          <CircleUserIcon strokeWidth={1} size={80} />
+          <img src={user.image} alt="" className="rounded-full w-24 h-24" />
         </div>
         <div className="w-full md:w-2/3 lg:w-1/2">
           <p className="font-semibold dark:font-normal tracking-wide mb-2">
