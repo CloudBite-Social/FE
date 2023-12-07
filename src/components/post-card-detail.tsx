@@ -15,13 +15,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { MessageCircle, MoreVerticalIcon } from "lucide-react";
-import { Post, deletePosts } from "@/utils/apis/posts";
+import { deletePosts } from "@/utils/apis/posts";
+import { UserPosts } from "@/utils/apis/users";
 
 interface Props {
-  data: Post;
+  data: UserPosts;
 }
 
-const PostCard = (props: Props) => {
+const PostCardDetail = (props: Props) => {
   const { data } = props;
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -30,8 +31,6 @@ const PostCard = (props: Props) => {
     try {
       const result = await deletePosts(post_id);
       toast({ description: result.message });
-
-      navigate("/");
     } catch (error: any) {
       toast({
         title: "Oops! Something went wrong.",
@@ -46,14 +45,14 @@ const PostCard = (props: Props) => {
       <div className="flex bg-white dark:bg-black border p-6 gap-4 rounded-lg justify-center shadow">
         <div className="flex-none">
           <img
-            src={data.user.image}
-            alt={data.user.name}
+            src="https://github.com/shadcn.png"
+            alt="johndoe"
             className="rounded-full w-12 h-12"
           />
         </div>
         <div className="flex flex-col gap-4 grow">
           <div>
-            <h1 className="font-medium">{data.user.name}</h1>
+            <h1 className="font-medium">John Doe</h1>
             <p className=" text-neutral-500 font-light text-xs">
               {format(new Date(data.created_at), "dd MMM Y - p")}
             </p>
@@ -111,4 +110,4 @@ const PostCard = (props: Props) => {
   );
 };
 
-export default PostCard;
+export default PostCardDetail;

@@ -16,6 +16,14 @@ export interface User {
   }[];
 }
 
+export interface UserPosts {
+  post_id: number;
+  caption: string;
+  image: string;
+  created_at: Date;
+  comment_count: number;
+}
+
 const MAX_FILE_SIZE = 5000000;
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png"];
 
