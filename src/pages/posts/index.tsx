@@ -32,7 +32,7 @@ const ListPost = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [params.keyword!]);
 
   return (
     <Layout>
