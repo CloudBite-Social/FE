@@ -88,7 +88,7 @@ const Home = () => {
   return (
     <Layout>
       <div className="w-full flex flex-col items-center gap-8 transition-all">
-        <div className="w-1/2 h-fit bg-white dark:bg-indigo-950/20 rounded-lg p-6 border shadow">
+        <div className=" w-full md:w-3/4 lg:w-1/2 h-fit bg-white dark:bg-indigo-950/20 rounded-lg p-6 border shadow">
           <Form {...form}>
             <form
               className="w-full flex flex-col gap-6"

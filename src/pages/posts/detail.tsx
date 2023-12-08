@@ -138,171 +138,175 @@ const DetailPosts = () => {
           </div>
         ) : (
           <>
-            <div className="w-fit xl:w-[60%] h-fit flex p-5 gap-3 rounded-md justify-center">
+            <div className="w-full lg:w-[60%] h-fit flex flex-col lg:flex-row p-5 gap-3 rounded-md justify-center">
               <Button
                 className="w-fit py-0 px-1 h-fit mr-4 rounded-md shadow border"
                 onClick={() => navigate("/")}
               >
                 <ChevronLeft size={40} />
               </Button>
-              <div className="flex-none">
-                <img
-                  src={detailPosts?.user.image}
-                  alt={detailPosts?.user.name}
-                  className="rounded-full w-12"
-                />
-              </div>
-              <div className="flex flex-col gap-4 grow">
-                <div>
-                  <h1 className="font-semibold">{detailPosts?.user.name}</h1>
-                  {detailPosts?.created_at.toString() && (
-                    <p className=" text-neutral-500 font-light text-xs">
-                      {format(
-                        new Date(detailPosts?.created_at),
-                        "dd MMM Y - p"
-                      )}
-                    </p>
-                  )}
-                </div>
-                <p>{detailPosts?.caption}</p>
-                {detailPosts?.image && (
+              <div className="w-full flex gap-3">
+                <div className="flex-none">
                   <img
-                    src={detailPosts.image}
-                    alt={detailPosts.image}
-                    className="rounded-lg"
+                    src={detailPosts?.user.image}
+                    alt={detailPosts?.user.name}
+                    className="rounded-full w-12"
                   />
-                )}
-                <hr />
-                <h1 className="font-semibold">Komentar</h1>
-                <div className="flex flex-col gap-6">
-                  {detailPosts?.comment == null ? (
-                    <div className="italic text-sm text-black/25 dark:text-white/25 text-center">
-                      No comment
-                    </div>
-                  ) : (
-                    <>
-                      {detailPosts?.comment.map((data) => (
-                        <div className="flex gap-4" key={data.comment_id}>
-                          <div className="flex-none">
-                            <img
-                              src={data.user.image}
-                              alt="johndoe"
-                              className="rounded-full w-10"
-                            />
+                </div>
+                <div className="flex flex-col gap-4 grow">
+                  <div>
+                    <h1 className="font-semibold">{detailPosts?.user.name}</h1>
+                    {detailPosts?.created_at.toString() && (
+                      <p className=" text-neutral-500 font-light text-xs">
+                        {format(
+                          new Date(detailPosts?.created_at),
+                          "dd MMM Y - p"
+                        )}
+                      </p>
+                    )}
+                  </div>
+                  <p>{detailPosts?.caption}</p>
+                  {detailPosts?.image && (
+                    <img
+                      src={detailPosts.image}
+                      alt={detailPosts.image}
+                      className="rounded-lg"
+                    />
+                  )}
+                  <hr />
+                  <h1 className="font-semibold">Komentar</h1>
+                  <div className="flex flex-col gap-6">
+                    {detailPosts?.comment == null ? (
+                      <div className="italic text-sm text-black/25 dark:text-white/25 text-center">
+                        No comment
+                      </div>
+                    ) : (
+                      <>
+                        {detailPosts?.comment.map((data) => (
+                          <div className="flex gap-4" key={data.comment_id}>
+                            <div className="flex-none">
+                              <img
+                                src={data.user.image}
+                                alt="johndoe"
+                                className="rounded-full w-10"
+                              />
+                            </div>
+                            <div className="space-y-1 flex-auto">
+                              <h1 className="font-semibold leading-none">
+                                {data.user.name}
+                                <span className="ml-2 font-light text-sm">
+                                  {format(
+                                    new Date(data.created_at),
+                                    "dd MMM Y - p"
+                                  )}
+                                </span>
+                              </h1>
+                              <p>{data.text}</p>
+                            </div>
+                            <div>
+                              {token && user.user_id == data.user.user_id && (
+                                <Alert
+                                  title="Are you absolutely sure?"
+                                  description="This action cannot be undone. This will permanently delete your comment messsage."
+                                  onAction={() =>
+                                    handleDeleteComments(
+                                      data.comment_id.toString()
+                                    )
+                                  }
+                                >
+                                  <Trash2 className="cursor-pointer" />
+                                </Alert>
+                              )}
+                            </div>
                           </div>
-                          <div className="space-y-1 flex-auto">
-                            <h1 className="font-semibold leading-none">
-                              {data.user.name}
-                              <span className="ml-2 font-light text-sm">
-                                {format(
-                                  new Date(data.created_at),
-                                  "dd MMM Y - p"
-                                )}
-                              </span>
-                            </h1>
-                            <p>{data.text}</p>
-                          </div>
-                          <div>
-                            {token && user.user_id == data.user.user_id && (
-                              <Alert
-                                title="Are you absolutely sure?"
-                                description="This action cannot be undone. This will permanently delete your comment messsage."
-                                onAction={() =>
-                                  handleDeleteComments(
-                                    data.comment_id.toString()
-                                  )
-                                }
-                              >
-                                <Trash2 className="cursor-pointer" />
-                              </Alert>
+                        ))}
+                      </>
+                    )}
+                  </div>
+                  {token && (
+                    <Form {...form}>
+                      <form
+                        onSubmit={form.handleSubmit(onSubmit)}
+                        className="flex justify-between items-center"
+                      >
+                        <div className="flex-auto">
+                          <CustomFormField control={form.control} name="text">
+                            {(field) => (
+                              <Input
+                                {...field}
+                                placeholder="Add comment..."
+                                type="text"
+                                disabled={form.formState.isSubmitting}
+                                aria-disabled={form.formState.isSubmitting}
+                                className="border-none bg-neutral-200/40 rounded-xl placeholder:italic px-4"
+                              />
                             )}
-                          </div>
+                          </CustomFormField>
                         </div>
-                      ))}
-                    </>
+                        <Button
+                          type="submit"
+                          className="bg-transparent dark:bg-black outline-none hover:bg-transparent"
+                          disabled={!token || form.formState.isSubmitting}
+                          aria-disabled={form.formState.isSubmitting}
+                        >
+                          {form.formState.isSubmitting ? (
+                            <>
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              <p>Please wait</p>
+                            </>
+                          ) : (
+                            <div className="flex gap-3 items-center cursor-pointer text-black dark:text-white">
+                              <SendHorizontalIcon />
+                              <p>Post</p>
+                            </div>
+                          )}
+                        </Button>
+                      </form>
+                    </Form>
                   )}
                 </div>
-                {token && (
-                  <Form {...form}>
-                    <form
-                      onSubmit={form.handleSubmit(onSubmit)}
-                      className="flex justify-between items-center"
-                    >
-                      <div className="flex-auto">
-                        <CustomFormField control={form.control} name="text">
-                          {(field) => (
-                            <Input
-                              {...field}
-                              placeholder="Add comment..."
-                              type="text"
-                              disabled={form.formState.isSubmitting}
-                              aria-disabled={form.formState.isSubmitting}
-                              className="border-none bg-neutral-200/40 rounded-xl placeholder:italic px-4"
-                            />
-                          )}
-                        </CustomFormField>
-                      </div>
-                      <Button
-                        type="submit"
-                        className="bg-transparent dark:bg-black outline-none hover:bg-transparent"
-                        disabled={!token || form.formState.isSubmitting}
-                        aria-disabled={form.formState.isSubmitting}
+                <div>
+                  {token && user.user_id == detailPosts?.user.user_id && (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <div>
+                          <MoreVerticalIcon className="cursor-pointer" />
+                        </div>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent
+                        className="mt-2 flex flex-col"
+                        align="end"
                       >
-                        {form.formState.isSubmitting ? (
-                          <>
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            <p>Please wait</p>
-                          </>
-                        ) : (
-                          <div className="flex gap-3 items-center cursor-pointer text-black dark:text-white">
-                            <SendHorizontalIcon />
-                            <p>Post</p>
-                          </div>
-                        )}
-                      </Button>
-                    </form>
-                  </Form>
-                )}
-              </div>
-              <div>
-                {token && user.user_id == detailPosts?.user.user_id && (
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <div>
-                        <MoreVerticalIcon className="cursor-pointer" />
-                      </div>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent
-                      className="mt-2 flex flex-col"
-                      align="end"
-                    >
-                      <DropdownMenuItem asChild>
-                        <CustomDialog
-                          description={
-                            <EditPostForm
-                              post_id={detailPosts?.post_id.toString()!}
-                            />
-                          }
-                        >
-                          <p className="dark:hover:bg-white/25 rounded">Edit</p>
-                        </CustomDialog>
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem asChild>
-                        <CustomDialog
-                          title="Are you sure delete this post?"
-                          onAction={() =>
-                            handleDeletePost(detailPosts?.post_id.toString()!)
-                          }
-                        >
-                          <p className="dark:hover:bg-white/25 rounded">
-                            Delete
-                          </p>
-                        </CustomDialog>
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                )}
+                        <DropdownMenuItem asChild>
+                          <CustomDialog
+                            description={
+                              <EditPostForm
+                                post_id={detailPosts?.post_id.toString()!}
+                              />
+                            }
+                          >
+                            <p className="dark:hover:bg-white/25 rounded">
+                              Edit
+                            </p>
+                          </CustomDialog>
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem asChild>
+                          <CustomDialog
+                            title="Are you sure delete this post?"
+                            onAction={() =>
+                              handleDeletePost(detailPosts?.post_id.toString()!)
+                            }
+                          >
+                            <p className="dark:hover:bg-white/25 rounded">
+                              Delete
+                            </p>
+                          </CustomDialog>
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  )}
+                </div>
               </div>
             </div>
           </>
