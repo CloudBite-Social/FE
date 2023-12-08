@@ -30,9 +30,25 @@ const EditProfile = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  const form = useForm<UpdateUserSchema>({
+    resolver: zodResolver(updateUserSchema),
+    defaultValues: {
+      name: profile?.name! ?? "",
+      email: profile?.email! ?? "",
+      password: profile?.password! ?? "",
+      image: profile?.image! ?? "",
+    },
+    values: {
+      name: profile?.name!,
+      email: profile?.email!,
+      password: "",
+      image: "",
+    },
+  });
+
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [form.formState.isSubmitSuccessful]);
 
   async function fetchData() {
     setIsLoading(true);
@@ -49,26 +65,8 @@ const EditProfile = () => {
     }
   }
 
-  const form = useForm<UpdateUserSchema>({
-    resolver: zodResolver(updateUserSchema),
-    defaultValues: {
-      name: profile?.name! ?? "",
-      email: profile?.email! ?? "",
-      password: profile?.password! ?? "",
-      image: profile?.image! ?? "",
-    },
-    values: {
-      name: profile?.name!,
-      email: profile?.email!,
-      password: profile?.password!,
-      image: "",
-    },
-  });
-
   const fileRef = form.register("image", { required: false });
-
   async function onSubmit(data: UpdateUserSchema) {
-    // data.image = data.image[0].name;
     try {
       const formData = new FormData();
       formData.append("name", data.name);
