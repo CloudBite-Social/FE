@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 
+import { Toaster } from "@/components/ui/toaster";
 import Navbar from "@/components/navbar";
-import { Toaster } from "./ui/toaster";
 
 interface Props {
   children: ReactNode;

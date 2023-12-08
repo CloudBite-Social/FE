@@ -5,6 +5,7 @@ import { User, getUser } from "@/utils/apis/users";
 import PostCardHistory from "@/components/post-card-history";
 import { toast } from "@/components/ui/use-toast";
 import Layout from "@/components/layout";
+
 import { Loader2 } from "lucide-react";
 
 const HistoryPost = () => {
@@ -42,7 +43,7 @@ const HistoryPost = () => {
         ) : (
           <>
             {historyPosts?.posts == null ? (
-              "No Post"
+              "No History Posts"
             ) : (
               <>
                 {historyPosts?.posts.map((datas) => (

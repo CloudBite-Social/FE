@@ -44,7 +44,7 @@ const RegisterForm = () => {
   return (
     <Form {...form}>
       <form
-        className="w-full flex flex-col gap-2"
+        className="w-full flex flex-col gap-4"
         onSubmit={form.handleSubmit(onSubmit)}
       >
         <CustomFormField control={form.control} name="name" label="Full Name">

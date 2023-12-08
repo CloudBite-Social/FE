@@ -37,21 +37,39 @@ import CustomDialog from "@/components/dialog";
 import EditPostForm from "@/components/form/edit-post-form";
 import { useToken } from "@/utils/contexts/token";
 
-import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
+import { Form } from "@/components/ui/form";
 import Alert from "@/components/alert";
+import { CustomFormField } from "@/components/CustomForm";
 
 const DetailPosts = () => {
+  const [detailPosts, setDetailPosts] = useState<DetailPost>();
+  const [isLoading, setIsLoading] = useState(false);
   const { token, user } = useToken();
   const navigate = useNavigate();
   const { toast } = useToast();
   const params = useParams();
-  const [isLoading, setIsLoading] = useState(false);
 
-  const [detailPosts, setDetailPosts] = useState<DetailPost>();
+  const form = useForm<CommentSchema>({
+    resolver: zodResolver(commentSchema),
+    defaultValues: {
+      post_id: detailPosts?.post_id! ?? "",
+      text: "",
+    },
+    values: {
+      post_id: detailPosts?.post_id!,
+      text: "",
+    },
+  });
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [form.formState.isSubmitSuccessful]);
+
+  useEffect(() => {
+    if (form.formState.isSubmitSuccessful) {
+      form.reset();
+    }
+  }, [form.formState]);
 
   async function fetchData() {
     setIsLoading(true);
@@ -60,6 +78,19 @@ const DetailPosts = () => {
       setDetailPosts(result.data);
 
       setIsLoading(false);
+    } catch (error: any) {
+      toast({
+        title: "Oops! Something went wrong.",
+        description: error.toString(),
+        variant: "destructive",
+      });
+    }
+  }
+
+  async function onSubmit(data: CommentSchema) {
+    try {
+      const result = await addComments(data);
+      toast({ description: result.message });
     } catch (error: any) {
       toast({
         title: "Oops! Something went wrong.",
@@ -87,31 +118,6 @@ const DetailPosts = () => {
       const result = await deletePosts(post_id);
 
       navigate("/");
-      toast({ description: result.message });
-    } catch (error: any) {
-      toast({
-        title: "Oops! Something went wrong.",
-        description: error.toString(),
-        variant: "destructive",
-      });
-    }
-  }
-
-  const form = useForm<CommentSchema>({
-    resolver: zodResolver(commentSchema),
-    defaultValues: {
-      post_id: +params.post_id! ?? "",
-      text: "",
-    },
-    values: {
-      post_id: +params.post_id!,
-      text: "",
-    },
-  });
-
-  async function onSubmit(data: CommentSchema) {
-    try {
-      const result = await addComments(data);
       toast({ description: result.message });
     } catch (error: any) {
       toast({
@@ -170,7 +176,9 @@ const DetailPosts = () => {
                 <h1 className="font-semibold">Komentar</h1>
                 <div className="flex flex-col gap-6">
                   {detailPosts?.comment == null ? (
-                    <></>
+                    <div className="italic text-sm text-black/25 dark:text-white/25 text-center">
+                      No comment
+                    </div>
                   ) : (
                     <>
                       {detailPosts?.comment.map((data) => (
@@ -214,48 +222,47 @@ const DetailPosts = () => {
                     </>
                   )}
                 </div>
-                <Form {...form}>
-                  <form
-                    onSubmit={form.handleSubmit(onSubmit)}
-                    className="flex justify-between items-center"
-                  >
-                    <div className="flex-auto">
-                      <FormField
-                        control={form.control}
-                        name="text"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormControl>
-                              <Input
-                                {...field}
-                                placeholder="Add comment..."
-                                className="border-none bg-neutral-200/40 rounded-xl placeholder:italic px-4"
-                              />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                    <Button
-                      type="submit"
-                      className="bg-transparent dark:bg-black outline-none hover:bg-transparent"
-                      disabled={!token || form.formState.isSubmitting}
-                      aria-disabled={form.formState.isSubmitting}
+                {token && (
+                  <Form {...form}>
+                    <form
+                      onSubmit={form.handleSubmit(onSubmit)}
+                      className="flex justify-between items-center"
                     >
-                      {form.formState.isSubmitting ? (
-                        <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          <p>Please wait</p>
-                        </>
-                      ) : (
-                        <div className="flex gap-3 items-center cursor-pointer text-black dark:text-white">
-                          <SendHorizontalIcon />
-                          <p>Post</p>
-                        </div>
-                      )}
-                    </Button>
-                  </form>
-                </Form>
+                      <div className="flex-auto">
+                        <CustomFormField control={form.control} name="text">
+                          {(field) => (
+                            <Input
+                              {...field}
+                              placeholder="Add comment..."
+                              type="text"
+                              disabled={form.formState.isSubmitting}
+                              aria-disabled={form.formState.isSubmitting}
+                              className="border-none bg-neutral-200/40 rounded-xl placeholder:italic px-4"
+                            />
+                          )}
+                        </CustomFormField>
+                      </div>
+                      <Button
+                        type="submit"
+                        className="bg-transparent dark:bg-black outline-none hover:bg-transparent"
+                        disabled={!token || form.formState.isSubmitting}
+                        aria-disabled={form.formState.isSubmitting}
+                      >
+                        {form.formState.isSubmitting ? (
+                          <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            <p>Please wait</p>
+                          </>
+                        ) : (
+                          <div className="flex gap-3 items-center cursor-pointer text-black dark:text-white">
+                            <SendHorizontalIcon />
+                            <p>Post</p>
+                          </div>
+                        )}
+                      </Button>
+                    </form>
+                  </Form>
+                )}
               </div>
               <div>
                 {token && user.user_id == detailPosts?.user.user_id && (

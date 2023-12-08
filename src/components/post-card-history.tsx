@@ -1,6 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
 
+import { useToken } from "@/utils/contexts/token";
+import { deletePosts } from "@/utils/apis/posts";
+import { UserPosts } from "@/utils/apis/users";
+
 import EditPostForm from "@/components/form/edit-post-form";
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
@@ -15,9 +19,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { MessageCircle, MoreVerticalIcon } from "lucide-react";
-import { deletePosts } from "@/utils/apis/posts";
-import { UserPosts } from "@/utils/apis/users";
-import { useToken } from "@/utils/contexts/token";
 
 interface Props {
   data: UserPosts;
@@ -45,7 +46,7 @@ const PostCardHistory = (props: Props) => {
 
   return (
     <div className="w-1/2 h-fit">
-      <div className="flex bg-white dark:bg-black border p-6 gap-4 rounded-lg justify-center shadow">
+      <div className="flex bg-white dark:bg-indigo-950/20 border p-6 gap-4 rounded-lg justify-center shadow">
         <div className="flex-none">
           <img
             src={user.image}
@@ -73,7 +74,7 @@ const PostCardHistory = (props: Props) => {
           </div>
           <hr />
           <Button
-            className="h-fit justify-start italic bg-neutral-100 text-black/50 hover:bg-neutral-300"
+            className="h-fit justify-start italic shadow-md"
             onClick={() => navigate(`/detail-post/${data.post_id}`)}
           >
             Add comment...
@@ -93,7 +94,9 @@ const PostCardHistory = (props: Props) => {
                     <EditPostForm post_id={data.post_id.toString()} />
                   }
                 >
-                  <p className="dark:hover:bg-white/25 rounded">Edit</p>
+                  <p className="hover:bg-indigo-100 dark:hover:bg-white/25 rounded">
+                    Edit
+                  </p>
                 </CustomDialog>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
@@ -102,7 +105,9 @@ const PostCardHistory = (props: Props) => {
                   title="Are you sure delete this post?"
                   onAction={() => handleDeletePost(data.post_id.toString())}
                 >
-                  <p className="dark:hover:bg-white/25 rounded">Delete</p>
+                  <p className="hover:bg-indigo-100 dark:hover:bg-white/25 rounded">
+                    Delete
+                  </p>
                 </CustomDialog>
               </DropdownMenuItem>
             </DropdownMenuContent>

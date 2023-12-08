@@ -9,6 +9,7 @@ import DetailPosts from "@/pages/posts/detail";
 import HistoryPost from "@/pages/profiles/history-post";
 import ListPost from "@/pages/posts";
 import ProtectedRoutes from "./protected-routes";
+import NotFound from "@/pages/not-found";
 
 export default function Router() {
   const router = createBrowserRouter([
@@ -49,7 +50,7 @@ export default function Router() {
         },
         {
           path: "*",
-          element: <div>404 page not found</div>,
+          element: <NotFound />,
         },
       ],
     },

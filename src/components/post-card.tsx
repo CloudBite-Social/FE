@@ -1,10 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
 
+import { Post, deletePosts } from "@/utils/apis/posts";
+import { useToken } from "@/utils/contexts/token";
+
 import EditPostForm from "@/components/form/edit-post-form";
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
 import CustomDialog from "@/components/dialog";
+import Alert from "@/components/alert";
 
 import {
   DropdownMenu,
@@ -15,9 +19,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { MessageCircle, MoreVerticalIcon } from "lucide-react";
-import { Post, deletePosts } from "@/utils/apis/posts";
-import { useToken } from "@/utils/contexts/token";
-import Alert from "@/components/alert";
 
 interface Props {
   data: Post;
@@ -46,7 +47,7 @@ const PostCard = (props: Props) => {
 
   return (
     <div className="w-1/2 h-fit">
-      <div className="flex bg-white dark:bg-black border p-6 gap-4 rounded-lg justify-center shadow">
+      <div className="flex bg-white dark:bg-indigo-950/20 border p-6 gap-4 rounded-lg justify-center shadow">
         <div className="flex-none">
           <img
             src={data.user.image}
@@ -63,7 +64,11 @@ const PostCard = (props: Props) => {
           </div>
           <p>{data.caption}</p>
           {data.image && (
-            <img src={data.image} alt={data.image} className="rounded-lg" />
+            <img
+              src={data.image}
+              alt={data.image}
+              className="rounded-lg w-fit"
+            />
           )}
           <div className="flex gap-1 cursor-pointer w-fit hover:text-indigo-300">
             <MessageCircle
@@ -73,14 +78,14 @@ const PostCard = (props: Props) => {
           </div>
           <hr />
           <Button
-            className="h-fit justify-start italic"
+            className="h-fit justify-start italic shadow-md"
             onClick={() => navigate(`/detail-post/${data.post_id}`)}
           >
-            Add comment...
+            {token ? "Add comment..." : "See comment..."}
           </Button>
         </div>
         <div>
-          {token && user.user_id === data.user.user_id && (
+          {token && user.user_id === data.user.user_id ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <div>
@@ -97,7 +102,9 @@ const PostCard = (props: Props) => {
                       <EditPostForm post_id={data.post_id.toString()} />
                     }
                   >
-                    <p className="dark:hover:bg-white/25 rounded px-10">Edit</p>
+                    <p className="hover:bg-indigo-100 dark:hover:bg-white/25 rounded px-10">
+                      Edit
+                    </p>
                   </CustomDialog>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
@@ -106,13 +113,50 @@ const PostCard = (props: Props) => {
                     title="Are you sure delete this post?"
                     onAction={() => handleDeletePost(data.post_id.toString())}
                   >
-                    <p className="dark:hover:bg-white/25 rounded px-8">
+                    <p className="hover:bg-indigo-100 dark:hover:bg-white/25 rounded px-8">
                       Delete
                     </p>
                   </Alert>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+          ) : (
+            <div className="invisible">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <div>
+                    <MoreVerticalIcon className="cursor-pointer" />
+                  </div>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  className="mt-2 flex flex-col items-center"
+                  align="end"
+                >
+                  <DropdownMenuItem asChild>
+                    <CustomDialog
+                      description={
+                        <EditPostForm post_id={data.post_id.toString()} />
+                      }
+                    >
+                      <p className="dark:hover:bg-white/25 rounded px-10">
+                        Edit
+                      </p>
+                    </CustomDialog>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Alert
+                      title="Are you sure delete this post?"
+                      onAction={() => handleDeletePost(data.post_id.toString())}
+                    >
+                      <p className="dark:hover:bg-white/25 rounded px-8">
+                        Delete
+                      </p>
+                    </Alert>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           )}
         </div>
       </div>

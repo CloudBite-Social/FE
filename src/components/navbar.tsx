@@ -1,4 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 import { useTheme } from "@/utils/contexts/theme-provider";
 import { useToken } from "@/utils/contexts/token";
@@ -13,9 +14,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useToast } from "@/components/ui/use-toast";
+import { Button } from "@/components/ui/button";
 
 import { ChevronDown, Search } from "lucide-react";
-import { useState } from "react";
 
 const Navbar = () => {
   const [keywords, setKeywords] = useState("");
@@ -39,29 +40,35 @@ const Navbar = () => {
 
   return (
     <header className="w-full sticky top-0">
-      <nav className="flex py-4 px-6 xl:px-32 items-center justify-between border mx-auto">
+      <nav className="flex py-4 px-6 xl:px-32 items-center justify-between mx-auto shadow-md dark:shadow-white/5">
         <Link to="/">
           <h1 className="text-3xl tracking-tight">
             <span className="font-bold">Cloud</span>
             <span className="text-[#6224C3] font-black">bite</span>
           </h1>
         </Link>
-        <div className="flex items-center gap-4 border rounded-full py-1 px-2 shadow shadow-border w-1/2">
-          <Search
-            onClick={() => {
-              navigate(`/list-post/${keywords}`);
-            }}
-          />
-          <div className="flex-auto">
+        <form className="w-1/2">
+          <div className="flex border rounded-full p-2 shadow shadow-border">
+            <Button
+              type="submit"
+              disabled={keywords === ""}
+              onClick={() => {
+                navigate(`/list-post/${keywords}`);
+              }}
+              className="h-fit w-fit rounded-full p-2 mr-4"
+            >
+              <Search />
+            </Button>
             <input
               type="text"
+              required
               placeholder="Search for posts here..."
               onChange={(e) => setKeywords(e.target.value)}
-              className="rounded-full py-1 px-2 outline-none bg-transparent placeholder:italic w-full"
+              className="rounded-full py-1 px-2 outline-none bg-transparent placeholder:italic w-full placeholder:text-sm"
             />
           </div>
-        </div>
-        <div className="flex items-center gap-3 border rounded-full py-1 px-2 shadow shadow-border">
+        </form>
+        <div className="flex items-center gap-3 border rounded-full py-1 px-2 shadow shadow-border bg-gradient-to-r from-indigo-600 to-indigo-400 text-white">
           <Avatar>
             <AvatarImage src={user.image} />
             <AvatarFallback>CN</AvatarFallback>

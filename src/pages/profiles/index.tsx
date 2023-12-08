@@ -1,13 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
+import { User, getUser } from "@/utils/apis/users";
+import { useToken } from "@/utils/contexts/token";
+
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/layout";
 
-import { User, getUser } from "@/utils/apis/users";
-
-import { useToken } from "@/utils/contexts/token";
 import { Loader2 } from "lucide-react";
 
 const Profie = () => {

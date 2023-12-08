@@ -1,7 +1,10 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
-import { zodResolver } from "@hookform/resolvers/zod";
+import { PostPayloadSchema, addPosts, getPosts } from "@/utils/apis/posts";
+import { postPayloadSchema } from "@/utils/apis/posts/types";
+import { useToken } from "@/utils/contexts/token";
 
 import { CustomFormField } from "@/components/CustomForm";
 import { useToast } from "@/components/ui/use-toast";
@@ -12,11 +15,7 @@ import PostCard from "@/components/post-card";
 import { Form } from "@/components/ui/form";
 import Layout from "@/components/layout";
 
-import { PostPayloadSchema, addPosts, getPosts } from "@/utils/apis/posts";
-import { postPayloadSchema } from "@/utils/apis/posts/types";
-
 import { Loader2, SendHorizontalIcon, UploadIcon } from "lucide-react";
-import { useToken } from "@/utils/contexts/token";
 
 const Home = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -28,9 +27,23 @@ const Home = () => {
   const [nextPage, setNextPage] = useState<string>();
   const [prevPage, setPrevPage] = useState<string>();
 
+  const form = useForm<PostPayloadSchema>({
+    resolver: zodResolver(postPayloadSchema),
+    defaultValues: {
+      caption: "",
+      image: "",
+    },
+  });
+
   useEffect(() => {
     fetchData();
-  }, [url]);
+  }, [url, form.formState.isSubmitSuccessful]);
+
+  useEffect(() => {
+    if (form.formState.isSubmitSuccessful) {
+      form.reset();
+    }
+  }, [form.formState]);
 
   async function fetchData() {
     setIsLoading(true);
@@ -51,16 +64,7 @@ const Home = () => {
     }
   }
 
-  const form = useForm<PostPayloadSchema>({
-    resolver: zodResolver(postPayloadSchema),
-    defaultValues: {
-      caption: "",
-      image: "",
-    },
-  });
-
   const fileRef = form.register("image", { required: false });
-
   async function onSubmit(data: PostPayloadSchema) {
     // data.image = data.image[0].name;
     try {
@@ -84,7 +88,7 @@ const Home = () => {
   return (
     <Layout>
       <div className="w-full flex flex-col items-center gap-8 transition-all">
-        <div className="w-1/2 h-fit bg-white dark:bg-black rounded-lg p-6 border shadow">
+        <div className="w-1/2 h-fit bg-white dark:bg-indigo-950/20 rounded-lg p-6 border shadow">
           <Form {...form}>
             <form
               className="w-full flex flex-col gap-6"
@@ -107,7 +111,7 @@ const Home = () => {
                       <Textarea
                         {...field}
                         placeholder="What’s up?"
-                        className="resize-none border-none"
+                        className="resize-none border-none bg-transparent"
                         disabled={!token || form.formState.isSubmitting}
                         aria-disabled={form.formState.isSubmitting}
                       />

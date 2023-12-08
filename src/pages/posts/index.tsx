@@ -1,10 +1,13 @@
-import Layout from "@/components/layout";
-import PostCard from "@/components/post-card";
-import { useToast } from "@/components/ui/use-toast";
-import axiosWithConfig from "@/utils/apis/axiosWithConfig";
-import { Loader2 } from "lucide-react";
-import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+
+import axiosWithConfig from "@/utils/apis/axiosWithConfig";
+
+import { useToast } from "@/components/ui/use-toast";
+import PostCard from "@/components/post-card";
+import Layout from "@/components/layout";
+
+import { Loader2 } from "lucide-react";
 
 const ListPost = () => {
   const [isLoading, setIsLoading] = useState(false);

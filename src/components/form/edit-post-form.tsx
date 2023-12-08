@@ -23,14 +23,31 @@ interface Props {
 }
 
 const EditPostForm = (props: Props) => {
+  const [detailPost, setDetailPost] = useState<DetailPost>();
   const { post_id } = props;
   const { toast } = useToast();
 
-  const [detailPost, setDetailPost] = useState<DetailPost>();
+  const form = useForm<PostPayloadSchema>({
+    resolver: zodResolver(postPayloadSchema),
+    defaultValues: {
+      caption: detailPost?.caption ?? "",
+      image: detailPost?.image ?? "",
+    },
+    values: {
+      caption: detailPost?.caption ?? "",
+      image: "",
+    },
+  });
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [form.formState.isSubmitSuccessful]);
+
+  useEffect(() => {
+    if (form.formState.isSubmitSuccessful) {
+      form.reset();
+    }
+  }, [form.formState]);
 
   async function fetchData() {
     try {
@@ -45,26 +62,12 @@ const EditPostForm = (props: Props) => {
     }
   }
 
-  const form = useForm<PostPayloadSchema>({
-    resolver: zodResolver(postPayloadSchema),
-    defaultValues: {
-      caption: detailPost?.caption ?? "",
-      image: detailPost?.image ?? "",
-    },
-    values: {
-      caption: detailPost?.caption!,
-      image: "",
-    },
-  });
-
   const fileRef = form.register("image", { required: false });
-
   async function onSubmit(data: PostPayloadSchema) {
-    // data.image = data.image[0].name;
     try {
       const formData = new FormData();
-      formData.append("image", data.image[0]);
       formData.append("caption", data.caption);
+      formData.append("image", data.image[0]);
 
       const result = await editPosts(post_id, formData as any);
       toast({
