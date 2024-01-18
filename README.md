@@ -12,7 +12,7 @@ Cloudbite is modern social media for Gen Z who wanna post some activites with te
 - Comment, edit comment, and delete comment
 - Edit profile and delete profile
 
-## Tech
+## ⚙️ Tech Stack
 
 Cloudbite uses a number of open source projects to work properly:
 
@@ -22,23 +22,28 @@ Cloudbite uses a number of open source projects to work properly:
 - [Shadcn] - Library kit UI for beautiful style
 - [Golang] - evented I/O for the backend
 
-## Installation
+## 🏃 Run Locally
 
-CloudBite requires [Vite](https://vitejs.dev/guide/) to run.
+Clone the project
 
-Install the dependencies and devDependencies and start the server.
-
-```sh
-$ cd cloudbite
-$ npm create vite@latest
+```bash
+git clone https://github.com/CloudBite-Social/FE.git
 ```
 
-For production environments...
+Go to the project directory
 
-```sh
-$ npx degit user/project#main my-project
-$ cd my-project
+```bash
+cd FE
+```
 
-$ npm install
-$ npm run dev
+Install dependencies
+
+```bash
+npm install
+```
+
+Start the server
+
+```bash
+npm run dev
 ```
